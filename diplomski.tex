@@ -3,6 +3,7 @@
 \usepackage{algorithm2e}
 \usepackage{float}
 \usepackage{mathtools}
+\usepackage{amsmath}
 
 \begin{document}
 
@@ -172,69 +173,88 @@ Since we examine the spreading process in discrete time, at each time step, the 
 \chapter{Patient zero -- single source epidemic detection}
 In the patient zero problem the source(s) of an epidemic or information diffusion propagation are determined based on limited knowledge of network structure or partial history of the propagation. The survey of methods for identifying the propagation source in networks can be found in \cite{soa_source}.
 
-We will focus on a patient zero problem given snapshot of population at time $T$ and complete knowledge of underlying contacting network with the assumption the epidemic has started from a single source node. 
+In the case of the SIR model there are three different approaches. \cite{Zhu} proposed a simple path counting approach and prove that the source node minimizes the maximum distance (Jordan centrality) to the infected nodes on infinite trees. \cite{Lohkov} used a dynamic message-passing algorithm for the SIR model and estimate the probability that a given node produces the observed snapshot using a mean-field approch and an assumption of a tree-like contact network. In \cite{Nino} analytical combinatoric, as well as Monte-Carlo based methods were introduced. These methods provide exact and approximate source probability distribution for any network topology. The benchmark results they provide show these Monte-Carlo based MAP estimators outperform previous results. The estimators proposed in \cite{Nino} will be presented in this chapter, while the newly proposed estimators based on importance sampling will be presented in the next chapter.
 
-Let random vector $\vec R = (R(1), \ldots, R(N))$ indicate the nodes that got infected up to a predefined temporal threshold $T$ with SIR epidemic process on network $G$ with $N$ nodes. $R(i)$ is Bernoulli random variable with the value $1$ if the node $i$ got infected before time $T$ from the start of the epidemic process. We observe one realization $\vec r*$ of $\vec R$ and we want to infer which nodes from the set of infected nodes $S$ are the most likely to be the source of the epidemic process determined by realization $\vec r*$.
+In accordance with \cite{Nino}, we will focus on a patient zero problem given snapshot of population at time $T$ and complete knowledge of underlying contacting network modelled by $G$ with the assumption the epidemic has started from a single source node and that it is governed by the SIR process with known $p$ and $q$. 
 
-In the case of the SIR model there are three different approaches. \cite{Zhu} proposed a simple path counting approach and prove that the source node minimizes the maximum distance (Jordan centrality) to the infected nodes on infinite trees. \cite{Lohkov} used a dynamic message-passing algorithm for the SIR model and estimate the probability that a given node produces the observed snapshot using a mean-field approch and an assumption of a tree-like contact network. In \cite{Nino} analytical combinatoric, as well as Monte-Carlo based methods were introduced. These methods provide exact and approximate source probability distribution for any network topology. The benchmark results they provide show the Monte-Carlo based estimators outperform previous results.
+Let random vector $\vec R = (R(1), \ldots, R(N))$ indicate the nodes that got infected up to a predefined temporal threshold $T$ with SIR$(p, q)$ epidemic process on network $G$ with $N$ nodes. $R(i)$ is Bernoulli random variable with the value $1$ if the node $i$ got infected before time $T$ from the start of the epidemic process. We observe one realization $\vec r_*$ of $\vec R$ and we want to infer which nodes from the set of infected or recovered nodes $S = \{\theta_1, \theta_2, \ldots, \theta_m \}$ are the most likely to be the source of the epidemic process.  The finite set of possible source nodes $S$ is determined by realization $\vec r_*$. Let $\Theta$ denote a random variable whose realizations are from $S$.
 
-\section{Direct Monte Carlo and Soft Margin Monte Carlo estimators}
+A maximum aposteriori probability estimate (MAP) is the node with the highest probability for being the source of the epidemic spread for a given realization $\vec r_*$: 
+\begin{equation}
+\hat{\Theta}_{MAP} = \text{arg max}_{\theta_i \in S} P(\Theta = \theta_i | \vec{R} = \vec r_*)
+\label{MAP}
+\end{equation}
+By applying the Bayes theorem with equal apriori probabilities $P(\Theta = \theta_i)$, probability in (\ref{MAP}) can be expressed as 
+\begin{equation}
+\begin{aligned}
+P(\Theta = \theta_i | \vec{R} = \vec r_*) &= \frac{P(\vec R = \vec r_* | \Theta = \theta_i) P(\Theta = \theta_i)}{\sum_{\theta_k \in S} P(\vec R = \vec r_* | \Theta = \theta_k) P(\Theta = \theta_k)} \\ &= \frac{P(\vec R = \vec r_* | \Theta = \theta_i)}{\sum_{\theta_k \in S} P(\vec R = \vec r_* | \Theta = \theta_k)}.
+\end{aligned}
+\label{MAP_pravi}
+\end{equation}
 
-\subsection{Monte Carlo simulations}
+\section{Direct Monte Carlo estimator}
 
 \textbf{The integration problem}
 \begin{equation}
 \mathbf{E_f[\textit{h(X)}]} = \int_{X} h(x) f(x) dx
 \label{exp}
-\end{equation} can be estimated using Monte Carlo technique with $m$ samples $X_1, \ldots, X_m$ generated from the density $f$ as the empirical average 
-\begin{equation*}
-h_m = \frac{1}{m} \sum_{j = 1}^{m} h(X_j).
-\end{equation*}
-The convergence of $h_m$ towards $\mathbf{E[\textit{h(x)}]}$ is assured by the Strong Law of Large Numbers.
-
-\subsection{Direct Monte Carlo detector}
-%TODO How the correctness of implementation was tested.]
-
-With \textbf{Direct Monte Carlo method} of estimating the epidemic source, two probability distributions may be inferred: 
+\end{equation} can be estimated using Monte Carlo technique with $n$ samples $X_1, \ldots, X_n$ generated from the density $f$ as the empirical average 
 \begin{equation}
-P(R = r* | \Theta = \theta_i) = \frac{m_i}{m}  
+h_n = \frac{1}{n} \sum_{j = 1}^{n} h(X_j).
 \end{equation}
+The convergence of $h_n$ towards $\mathbf{E_f[\textit{h(X)}]}$ is assured by the Strong Law of Large Numbers.
+
+Inferring the probability  $P(\vec R = \vec r_* | \Theta = \theta_i)$ up to multiplicative constant is an integration problem equivalent to expectation of Kronecker delta function
+ $\delta(R) = 1\{R = r_{*}\}$ where $R$ is a random variable governed by probability $P(R  | \Theta = \theta_i)$. 
+ Let $m_i$ denote estimation of expected number of hits for a fixed source $\theta_i$ estimated using Monte Carlo technique:
 \begin{equation}
-P(\Theta = \theta_i | R = r*) = \frac{m_i}{\sum_{j \in S} m_j}
+ m_i = \sum_{j = 1}^{n} 1\{R_i = r_{*}\}
+\label{mi}
 \end{equation}
-where $m$ is the number of Monte Carlo simulations on one node and $m_i$ the number of simulations starting from node $\theta_i$ with realization equal to $r*$. With the observed correspondence between the Direct Monte Carlo and analytical combinatoric method for estimation of $P(\Theta = \theta_i | R = r*)$, one may try to infer all priors $P(\theta_i)$ are equal. 
+where $R_i$ are drawn from $P(\vec R | \Theta = \theta_i)$. With Direct Monte Carlo estimator $m_i$ is obtained by simulating epidemic process up to time $T$ starting from a single infected node $\theta_i$ and checking whether the generated realization $R_i$ coincides with $r_*$. Since $m_i$ is estimation of $P(\vec R = \vec r_* | \Theta = \theta_i)$ up to multiplicative constant $1/n$ for all $\theta_i \in S$, we derive Direct Monte Carlo MAP estimator based on the estimation of probability $P(\Theta = \theta_i | \vec R = \vec r_*)$ combining (\ref{mi}) with (\ref{MAP_pravi}): 
+\begin{equation}
+\hat{P_i}^n = \hat{P}(\vec R = \vec r_* | \Theta = \theta_i) = \frac{m_i}{m}
+\end{equation}
+where $m = \sum_{j = 1}^{n} m_j$ .
 
-Note those two are also integration problems since $P(R = r* | \Theta = \theta_i) = \mathbf{E}[1\{R = r*\}] $ where $1\{R = r*\}$ is Kronecker delta function and $R$ is drawn from distribution $P(R|\Theta = \theta_i)$. This distribution is also not known directly. The sample from it can be drawn by one SIR simulation from the source node $\theta_i$. 
+If the size of realization $\vec r_*$ is big, the number of simulations required to obtain reliable estimations can be large. Since the estimations for different source node candidates are independent, the computations can be parallelised.  
 
-Additionally, $P(R = r* | \Theta = \theta_i) = \mathbf{E}[1\{\phi_J(R, r*) = 1\}] = \mathbf{E}[1\{\phi_{XNOR}(R, r*) = 1\}]$. We can also note only one value of random variable in the expectation we are interested in so those variables can be reduced to Bernoulli random variables.
+Additionally for the SIR model, a prunning mechanism can be incorporated. If a sampling simulation infects a node that was not infected during the target epidemic  represented by the realization $r_*$, it is safe to stop the sampling simulation prior to ending time $T$ and call a sample unequal to target realization $r_*$.
 
-Let's examine the distribution of $\phi_J(R, r*)$ for one fixed realization $r*$  in \ref{slika} obtained from samples of $P(R)$ under the SIR model $SIR(p = 0.2, q = 0.3)$ for $T = 5$ time steps. The critical  realization, $\phi_j = 1$, is under represented here so there exist quite a room for improvement. For the sample in \ref{slika} $P(R = r *) < 10^{-4}$. 
+The accuracy of direct Monte Carlo approximations are controlled by convergence conditions. Upon estimating two source PDF's, $\hat{P}_i^n$ and $\hat{P}_i^{2n}$ with $n$ and $2n$ independent simulations, respectively. The PDF's are said to converge when the following conditions are satisfied:
+\begin{equation}
+| \hat{P}_i^{2n} - \hat{P}_i^{n} | / \hat{P}_{2n} \leq c, \hspace{1mm} | \hat{P}_i^{2n} - \hat{P}_i^{n} | \leq c \hspace{5mm} \forall \theta_i \in S.
+\end{equation}
 
-Using selective sampling for the integration problem of estimating $P(R = r* | \Theta = \theta_i)$ would require knowing the original sampling density $P(R | \Theta = \theta_i)$. We would sample $m$ realizations $R_i$ from some other distribution, $P_{g}(R)$ and estimate $P(R = r*| \Theta = \theta_i)$ as 
+\begin{algorithm}[H]
+ \KwData{$\mathbf{G}$ - network, $(p, q)$ - parameters of the SIR process, 
+  $\vec r_*$ - target realization,    
+  $T$ - temporal threshold, 
+  $\theta_i$ - proposed initial source node,
+  $n$ - number of simulations}
+ \KwResult{ $m_i$ - estimated expected number of realizations started from $\theta_i$ and completely corresponding to $r_*$ }
+ $m_i = 0$\; 
+ \For{$s = 1$ to $n$} {
+   \For{$t = 1$ to $n$} {
+    Run one SIR simulation $(p, q, \theta_i)$ for time step $t$ and obtain  
+    $r_i^t$.\; 
+    \If{$\hspace{3mm} \exists j \in N: (r_i^t(j) == 1$ \textbf{and} $r_*(j) == 0)$} {
+   \textbf{break}\;
+    }
+   }
+    \If{$r_i^T$ \textbf{equals} $r_*$} {
+  $m_i = m_i + 1$\;
+ }
+ }
+  \Return $m_i$
+  \vspace{5mm}
+ \label{DMC_lag}
+ \caption{Direct Monte Carlo estimation $m_i$ of expected number of realization hits completely corresponding to $r_*$  for a fixed source $\theta_i$.}
+\end{algorithm}
 
-\begin{equation*}
-P(R = r* | \Theta = \theta_i) \approx \frac{1}{m} \sum_{j = 1}^{m} \frac{P(R_i | \Theta_i)}{P_{g}(R_i)} 1\{R = r\}.
-\end{equation*}
+\section{The Soft Margin estimator}
 
-Since the underlying distribution of $R$ from the SIR simulations is not known directly, we must estimate it first. However, the estimation of that distribution is as hard as estimating the original probability. 
-
-\begin{figure}[h]
-\includegraphics[scale=0.7]{/home/iva/epdf_Jaccard.png}
-\end{figure}
-\begin{figure}[h]
-\includegraphics[scale=0.7]{/home/iva/epdf_XNOR.png}
-\end{figure}
-
-\begin{figure}[h]
-\includegraphics[scale=1]{/home/iva/graph.png}
-\label{slika}
-\end{figure}
-
-
-\section{The Soft Margin detector}
-[TODO How the correctness of implementation was tested.]
-
-\subsection{Convergence of Soft Margin}
+%\subsection{Convergence of Soft Margin}
 For the Soft Margin estimator we use the following convergence condition: 
 \begin{equation*}
 |\hat{P}_a^{n}(\Theta = \theta_{MAP} | \vec{R} = \vec{r}_*) - \hat{P}_a^{2n}(\Theta = \theta_{MAP} | \vec{R} = \vec{r}_*)| / \hat{P}_a^{2n}(\Theta = \theta_{MAP} | \vec{R} = \vec{r}_*) \leq 0.05 
@@ -245,9 +265,8 @@ and
 \end{equation*}
 
 Since with smaller parameter $a$ the estimation is closer to the direct Monte Carlo estimator, we choose the  smallers parameter $a$ for which the source probability distribution converges. 
-\section{Benchmark dataset}
-\cite{Nino} provided a dataset of SIR realizations along with their estimations obtained with Direct Monte Carlo for $4$ classes of SIR parameters: $A = (p = 0.3, q = 0.3, T =0 .5), B = (p = 0.3, q = 0.7, T = 0.5), C = (p = 07, q = 0.3, T = 5)$ and  $D = (p = 0.7, q = 0.7, T = 5)$. The benchmark dataset contains $160$ such realizations on the grid of size $30x30$.
- Their estimations obtained with Direct Monte Carlo were held under convergence condition $|P_{ML}^{2n} - P_{ML}^{n}| / P_{ML}^{2n}| \leq 0.05$  and $|P_i^x - P_i^{2x}| \leq 0.05$ for all other nodes.
+
+\section{Time complexity of estimators}
  
 
 
@@ -426,7 +445,7 @@ As $t$ increases, $cv_t^2$ increases stochastically and the weights $w_t$ typica
 \section{Sequential Monte Carlo detector}
 
 \section{Source detection}
-Given snapshot $r*$ that holds all infected nodes up to time $T$, we want to determine the likelihood of epidemic starting in node $\theta_i$, $P(\theta_i | S = s*)$ where $R$ is a random variable whose one realization is $s*$.   Since all the apriori probabilities $P(\theta_i)$ are the same, we can approximate aposteriori probabilities $P(S = s* | \theta_i)$ and use then to determine $P(\theta_i | S = s*)$:
+Given snapshot $r_*$ that holds all infected nodes up to time $T$, we want to determine the likelihood of epidemic starting in node $\theta_i$, $P(\theta_i | S = s*)$ where $R$ is a random variable whose one realization is $s*$.   Since all the apriori probabilities $P(\theta_i)$ are the same, we can approximate aposteriori probabilities $P(S = s* | \theta_i)$ and use then to determine $P(\theta_i | S = s*)$:
 \begin{equation*}
 \hat{P}(\theta_i | S = s*) = \frac{\hat{P}(S = s* | \theta_j)}{\sum_j \hat{P}(S = s* | \theta_j)}
 \end{equation*}
@@ -464,7 +483,8 @@ It is certain, however, we do not want to infect the nodes that were never infec
 It may be reasonble to increase $p$ at each step of \textbf{SIS} procedure but it is not clear when this should be done. Additionally, one might want to use a resampling or a rejection technique based on $vc^2$ for simulations with many  \textbf{SIS} steps. This has to be done carefully too since our target event is rare and weights $w$ are naturally small.
 
 
-\section{Benchmark dataset}
+\chapter{Benchmark dataset}
+%TODO how was the correctness of the implementation tested.
 \cite{Nino} provided a dataset of SIR realizations along with their estimations obtained with Direct Monte Carlo for $4$ classes of SIR parameters: $A = (p = 0.3, q = 0.3, T =0 .5), B = (p = 0.3, q = 0.7, T = 0.5), C = (p = 07, q = 0.3, T = 5)$ and  $D = (p = 0.7, q = 0.7, T = 5)$. The benchmark dataset contains $160$ such realizations on the grid of size $30x30$.
  Their estimations obtained with Direct Monte Carlo were held under convergence condition $|P_{ML}^{2n} - P_{ML}^{n}| / P_{ML}^{2n}| \leq 0.05$  and $|P_i^x - P_i^{2x}| \leq 0.05$ for all other nodes.
  
