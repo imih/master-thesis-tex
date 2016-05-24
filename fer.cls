@@ -92,9 +92,8 @@
 \if@fontlmodern\RequirePackage{lmodern} \fi
 
 % Postavljanje stila citiranja
-\if@citeauthoryear \RequirePackage[ numbers]{natbib}
-\else \RequirePackage[numbers, square]{natbib}
-\fi
+\RequirePackage[numbers]{natbib}
+
 
 % Umjesto poziva \RequirePackage[outsidefoot]{pageno}.
 % Neke LaTeX distribucije odbijaju automatski instalirati pageno paket.
@@ -115,7 +114,7 @@
 
 % Promjena naziva poglavlja ``Bibliografija'' -> ``Literatura''
 \addto\captionscroatian{%
-	\def\bibname{Literatura}
+	\def\bibname{Bibliography}
 }
 
 % Podešavanje oznaka kod listi (1. razina je crtica, 2. puni krug) 
