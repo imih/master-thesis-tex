@@ -1,6 +1,6 @@
 \documentclass[times, utf8, diplomski]{fer}
 \usepackage{booktabs}
-\usepackage[ruled]{algorithm2e}
+\usepackage[ruled, linesnumbered, noend]{algorithm2e}
 \usepackage{float}
 \usepackage{mathtools}
 \usepackage{amsmath}
@@ -26,6 +26,7 @@
 \tableofcontents
 \listoffigures
 \listofalgorithms
+\addcontentsline{toc}{chapter}{List of Algorithms}
 
 \chapter{Introduction}
 
@@ -34,7 +35,7 @@ A \emph{network} is a set of items with connections between them. The Internet, 
 \begin{figure}[htp]
 \centering
 \includegraphics[scale = 0.3]{/home/iva/dipl/img/alters2.png}
-\caption{A network graph of Paul Erd\~os and his collaborators, courtesy of \citet{krebs}. The nodes represent mathematicians and the edges represent the relationship "wrote a paper with".}
+\caption{A network graph of Paul Erd{\H{o}}s and his collaborators, courtesy of \citet{krebs}. The nodes represent mathematicians and the edges represent the relationship "wrote a paper with".}
 \label{net}
 \end{figure}
 A network structure or a topology can be mathematically modelled as a graph with set of vertices (or nodes) representing the items of the network. The network structure can then be analysed using graph theory. An edge between two nodes represents a connection between the two corresponding items. Edges can be directed or undirected, depending  on the nature of the connection.  To better mimic the real-world (complex) network structure, it is common to add attributes to nodes and/or edges or to have both directed and undirected edges on the same graph.
@@ -50,7 +51,6 @@ The basis of the complex network theory -- the structure  analysis and the proce
 \section{Epidemic processes in complex networks}
 
 The models for stochastic processes such as disease spreading are categorized as homogeneous or heterogeneous mixing frameworks. The former assume that all individuals in a population have an equal probability of contact and different equations can be applied to understand epidemic dynamics. Since such models fail to describe the realistic scenario of disease spreading,  heterogeneity is introduced by using a network structure.
-
 
 There is an extremely close relationship between epidemiology and network theory since the connections between individuals (or group of individuals) allowing an infectious disease to propagate naturally define a contact network. Simplest epidemic dynamics consider a system with fixed total population consisting of $N$ individuals modelled with undirected contacting network. We define the contact network as an undirected and non-weighted graph $G(N, L)$ with fixed set of nodes $N$ and fixed set of links $L$. A link $(u, v)$ between two nodes exists if the two corresponding members were in contact during the epidemic time.
 
@@ -68,73 +68,119 @@ In the patient zero problem the source(s) of an epidemic or information diffusio
 
 In the case of the SIR model there are three different approaches. \citet{Zhu} proposed a simple path counting approach and prove that the source node minimizes the maximum distance (Jordan centrality) to the infected nodes on infinite trees. \citet{Lohkov} used a dynamic message-passing algorithm and estimate the probability that a given node produces the observed snapshot using a mean-field approch and an assumption of a tree-like contact network.
 
-\citet{Nino} introduce analytical combinatoric, as well as Monte-Carlo based methods for source detection problem. These methods produce exact and approximate source probability distribution for any network topology based on a snapshot of the epidemic at known discrete time $T$. The provided benchmark results show Monte-Carlo based MAP estimators outperforming previous results on a grid network for the SIR model. Additionally, they are applicable to many heterogeneous mixing models (SIR, IS, ISS) and are able to introduce uncertainty in the epidemic starting time, as well as uncertainty of temporal ordering of interactions. 
-Even though the introduced Monte Carlo methods assume the epidemic started from a single source, one can also discriminate such hypothesis using Kolmogorov-Smirnov test.
+\citet{Nino} introduce analytical combinatoric, as well as Monte-Carlo based methods for source detection problem. These methods produce exact and approximate source probability distribution for any network topology based on a snapshot of the epidemic at known discrete time $T$. The provided benchmark results show Monte-Carlo based MAP estimators outperforming previous results on a grid network for the SIR model. Additionally, these methods are applicable to many heterogeneous mixing models (SIR, IS, ISS) and are able to introduce uncertainty in the epidemic starting time, as well as uncertainty of temporal ordering of interactions. 
+Even though the introduced Monte Carlo methods assume the epidemic started from a single source, one can also discriminate such hypothesis using Kolmogorov-Smirnov test \cite{Nino}.
 
 \section{Effects of network topology on epidemic spreading and detectability of patient zero}
 Complex networks show various levels of correlations in their topology which can have an impact on dynamical processes running on top of them. 
-Real-world network of relevance for epidemic spreading are different from regular lattices. Networks are hierarchically organized with a few nodes that may act as hubs and where the vast majority of nodes have few interactions. Although randomness in the connection process of nodes is always present, organizing principles and correlations in the connectivity patterns define network structures that are deeply affecting the evolution and behavior of epidemic and contagion process. These network's complex features often find their signature in statistical distributions which are generally heavy tailed and skewed. 
+Real-world network of relevance for epidemic spreading are different from regular lattices. Networks are hierarchically organized with a few nodes that may act as hubs and where the vast majority of nodes have few direct connections. Although randomness in the connection process of nodes is always present, organizing principles and correlations in the connectivity patterns define network structures that are deeply affecting the evolution and behavior of epidemic and contagion process. These network's complex features often find their signature in statistical distributions which are generally heavy tailed and skewed. 
 
-\citet{Nino} have also introduced a metric for source detectability based on the entropy of estimated source probability distribution. The detectability of source node differs based on models parameters concerning the rate of disease spreading. Since topological properties of the network  have profound impact on epidemic dynamic, the detectability of source node depending on its topological properties is in the focus of this thesis.
+\citet{Nino} have also introduced a metric for source detectability based on the entropy of estimated source probability distribution. The detectability of source node differs based on models parameters concerning the rate of disease spreading. Since topological properties of the network  have profound impact on epidemic dynamic, the detectability of source node depending on its topological properties is an interesting analytical problem.
 
-\section{Structure of the thesis}
-%TODO give overview of the chapters
-In Chapter \ref{structure} ... 
-
-% [x] Implement Monte Carlo and Soft margin algorithms for the identification of patient zero for SIR (susceptible-infected-recovered) and ISS (ignorant-spreader-stifler) dynamic models in networks. 
-In Chapter \ref{EPM} the SIR epidemic model as well as ISS model for rumour diffusion are introduced and the algorithms for their simulation in discrete time are presented. 
-
-Chapter \ref{PZ} introduces Direct Monte Carlo and Soft Margin Monte Carlo algorithms \cite{Nino} for indetification of patient zero. 
-
-% [x] Check whether it is possible to implement importance sampling in the Monte Carlo algorithm. 
-In Chapter \ref{IS} the technique of importance sampling is  used to create the Sequential Importance Sampling (SIS) algorithm - a new algorithm for single source detection problem. A few reduction based optimization techniques are also introduced. 
-
-% [x] The solution should be appropriated for parallel architectures and implemented in c++. % [] The code is to be documented using comments and should follow the Google C++ Style Guide. 
-% [x]The complete application should be hosted on Github under an OSI-approved licence.\textbf{q}
-Chapter \ref{Bench} uses benchmark data from \cite{Nino} to assert accuracy of Direct Monte Carlo and Soft Margin implementations. Detailed analysis of SIS algorithm performance is also given.
-
-% [x] For several networks explore the detectability of the source node when source nodes are selected using different centrality measures such as degree, k-core, betweennes centraliy and eigenvector centrality. 
-In Chapter \ref{Det} detectability of source node based on parameters of SIR and ISS model is revisited. The detectability analysis for $1-$Barabasi and Erdos Renyi sample graphs is given, as well as the detectability breakdown based on nodes attributes: degree, k-core, betweenness centrality and eigenvector centrality.
+%\section{Structure of the thesis}
+%%T give overview of the chapters
+%In Chapter \ref{structure} ... 
+%
+%% [x] Implement Monte Carlo and Soft margin algorithms for the identification of patient zero for SIR (susceptible-infected-recovered) and ISS (ignorant-spreader-stifler) dynamic models in networks. 
+%In Chapter \ref{EPM} the SIR epidemic model as well as ISS model for rumour diffusion are introduced and the algorithms for their simulation in discrete time are presented. 
+%
+%Chapter \ref{PZ} introduces Direct Monte Carlo and Soft Margin Monte Carlo algorithms \cite{Nino} for indetification of patient zero. 
+%
+%% [x] Check whether it is possible to implement importance sampling in the Monte Carlo algorithm. 
+%In Chapter \ref{IS} the technique of importance sampling is  used to create the Sequential Importance Sampling (SIS) algorithm - a new algorithm for single source detection problem. A few reduction based optimization techniques are also introduced. 
+%
+%% [x] The solution should be appropriated for parallel architectures and implemented in c++. % [] The code is to be documented using comments and should follow the Google C++ Style Guide. 
+%% [x]The complete application should be hosted on Github under an OSI-approved licence.\textbf{q}
+%Chapter \ref{Bench} uses benchmark data from \cite{Nino} to assert accuracy of Direct Monte Carlo and Soft Margin implementations. Detailed analysis of SIS algorithm performance is also given.
+%
+%% [x] For several networks explore the detectability of the source node when source nodes are selected using different centrality measures such as degree, k-core, betweennes centraliy and eigenvector centrality. 
+%In Chapter \ref{Det} detectability of source node based on parameters of SIR and ISS model is revisited. The detectability analysis for $1-$Barab\'{a}si and Erdos Renyi sample graphs is given, as well as the detectability breakdown based on nodes attributes: degree, k-core, betweenness centrality and eigenvector centrality.
 
 \chapter{Complex network structure}
 \label{structure}
-Most of real networks in social and biological systems are characterized by the similar topological properties: small average path length, high clustering coefficients, fat tailed scale-free degree distributions, degree correlations and  local network structure observable as the presence of communities.
-
-The small world network property is considered to be present when average shortest path length is comparable to logarithm of the network size. 
-
-The \textbf{degree distribution} $P(k)$ defines the probability of choosing the vertex with degree $k$ uniformly from the set of all vertices. The power-law degree distribution of the form $P(k) = Ak^{-\gamma}$ where $2<\gamma<3$ can be fitted to degree distributions of most real networks. The networks with such property are refered to as \emph{scale-free networks}. 
-
+Most of real networks in social and biological systems are characterized by the similar topological properties: small average path length, high clustering coefficients, fat tailed scale-free degree distributions, degree correlations and  local network structure observable in the presence of communities.
 
 \section{Measures and metrics}
-The adjacency matrix $A$ of network with $N$ nodes is a matrix of size $N \times N$ which contains non-zero element $A_{ij}$ if there exist an edge between vertices $i$ and $j$. For the unweighted network all non-zero elements are equal to one.  Note the adjacency matrix is symmetric for undirected graphs and generally asymmetric for  directed graphs.
+Since larger networks can be difficult to envision and describe only by the graph $G$, we observe more detailed insights of the structure of these networks with various metrics. 
 
-\subsection{Degree}
-\subsection{K-core}
+\subsubsection{Degree distribution}
+The degree distribution $P(k)$ defines the probability that a vertex in the networks interacts with exactly $k$ other vertices. That is, $P(k)$ is the fraction of nodes with degree $k$ under a degree distribution $P$.  
 
-
-
-A path in a network is defined as an arbitrary sequence of vertices in which each pair of adjacent vertices are  directly connected in the graph. Number of different paths between two vertices $i$ and $j$ can be computed from the $0-1$ adjacency matrix as $A^k_{ij}$. The number of different cycles of length $k$ can thus be computed as the sum $\sum_{m \in V} A^k_{mm}$ - exactly the trace of the matrix $A^k$. 
-
-A geodesic path is the shortest path between two vertices. Let $d_{ij}$ denote the length of geodesic path from vertex $i$ to vertex $j$. 
+The \emph{scale-free} power-law degree distribution of the form $P(k) = Ak^{-\gamma}$ where $2<\gamma<3$ appears in a wide variety of complex networks. The networks with such property are referred to as \emph{scale-free networks}. This feature is a consequence of two generic mechanisms: networks expand continuously by the addition of new vertices and new vertices attach preferentially to sites that are already well connected \cite{Barabasi99emergenceof}. It is often said the scale-free distributions have "fat tails" since there tends to be many more nodes with very large degree compared to a Poisson degree distribution in a network with links formed completely independently.
 
 
+\subsubsection{Geodesic path}
 
- The \textbf{closeness centrality} $C_i$ of vertex $v_i$ is the harmonic mean between the distances of geodesic paths from the vertex $v_i$ to all others:
-$$ C_i = \frac{1}{n - 1} \sum_{j \neq i} \frac{1}{d_{ij}}. $$
+A path in a network is defined as an arbitrary sequence of vertices in which each pair of adjacent vertices is  directly connected in the graph. 
+%Number of different paths between two vertices $i$ and $j$ can be computed from the $0-1$ adjacency matrix as $A^k_{ij}$. The number of different cycles of length $k$ can thus be computed as the sum $\sum_{m \in V} A^k_{mm}$ - exactly the trace of the matrix $A^k$. 
 
-Let $\sigma_{st}$ be the number of geodesic paths between pairs of vertices $v_s$ and $v_t$ and let $\sigma_{st}(v_i)$ be the number of the geodesic paths $\sigma_{st}$  which pass through the vertex $v_i$. The \textbf{betweenness centrality} is than defined as $$C(v_i) = \sum_{st} \frac{\sigma_{st}(v_i)}{\sigma_{st}} $$.
+A geodesic path is the shortest path between two vertices.
+The small world network property observable in complex netowrk is considered to be present when average shortest path length is comparable to the logarithm of its network size. 
 
-\textbf{Eigenvector centrality} \cite{bonacich1987power}  captures a concept the vertex is more important if it has more important neighbours. For the given vertex $v$, the eigenvector centrality is defined recursively as $$x_v = \sum_{k} A_{vk} x_k$$  where $A$ is the adjacency matrix. Consequently, the only $x_k$ we are interested in are the neighbours of $x_v$. 
+\subsubsection{Centrality}
+Centrality measures compare  nodes and say something about how a given node relates to the overall network. 
 
-Centralities $x_v$ can be calculated iteratively, starting from arbitrary vector $\vec x(0) = \{x_1(0), x_2(0), \ldots, x_N(0) \}$ using equality $\vec x(t) = A^t \vec x(0)$. 
-%TODO continue
+\textbf{Degree centrality} describes how connected a node is in terms of direct connections. For a vertex $v$ in a network with $n$ vertices it is defined as $\frac{deg(v)}{n - 1}$. Since the degree centrality captures only centrality in terms of direct connections, it doesn't measure node's marginal contribution to the network when it has relatively few links  but lies in a critical location in the network. 
+
+\textbf{Closeness centrality} describes how close a given vertex is to any other vertex.  Let $d_{ij}$ denote the length of geodesic path from vertex $i$ to vertex $j$. 
+For  vertex $v$ closeness centrality $C_v$ is defined as harmonic mean between the distances of geodesic paths from vertex $v$ to all others:
+\begin{equation}
+C_v = \frac{1}{n - 1} \sum_{j \neq i} \frac{1}{d_{vj}}. 
+\end{equation}
+
+\textbf{Betweenness centrality} describes how well situated a vertex is in terms of the paths it lies on. Let $\sigma_{st}$ be the number of geodesic paths between pairs of vertices $v_s$ and $v_t$ and let $\sigma_{st}(v_i)$ be the number of the geodesic paths $\sigma_{st}$  which pass through the vertex $v_i$. The betweenness centrality is than defined as 
+\begin{equation}
+C(v_i) = \sum_{st} \frac{\sigma_{st}(v_i)}{\sigma_{st}}.
+\end{equation}
+
+Neighbours characteristics like  eigenvector centrality measure how important, central or influential nodes neighbours are and  capture a concept the vertex is more important if it has more important neighbours.  
+
+Let's define the adjacency matrix $A$ of network $G$ with $N$ nodes as a matrix of size $N \times N$ that contains non-zero element $A_{ij}$ if there exist an edge between vertices $i$ and $j$. For an unweighed network all non-zero elements of $A$ are equal to one.  Note the adjacency matrix is symmetric for undirected graphs and generally asymmetric for  directed graphs. 
+
+For the given vertex $v$,  \textbf{ eigenvector centrality } $C_v$ \cite{bonacich1987power} is proportional to the sum of  centralities of its neighbours: 
+\begin{equation}
+\lambda C_v = \sum_{k} A_{vk} C_k.
+\end{equation}
+ Consequently, $C_v$ is eigenvector of adjacency matrix $A$ corresponding to eigenvalue $\lambda$.  The standard convention is to use the eigenvector associated with the largest eigenvalue for eigenvector centrality. 
+
+\subsubsection{K-core}
+A $k$-core of undirected graph $G$ is a maximal connected subgraph of $G$ in which all vertices have degree at least $k$. The $k$-core is a measure of how sparse the graph is. The $k$-core can be obtained in $O(|L|)$ by iteratively removing all vertices of degree less than $k$ from the graph. 
+
+ A vertex $u$ has coreness $c$ if it belongs to a $c$-core but not to  $(c+1)$-core. The $k$-core decomposition refers to a process of determining the coreness of each node and grouping the nodes according to their coreness. The concept of $k$-core (decomposition) was introduced to study the clustering structure of social networks and to describe the evolution of random graphs. $K$-core decomposition of complex networks reveals rich $k$-core architectures (Figure \ref{kcore}). 
+
+\begin{figure}
+\includegraphics[width=\textwidth]{/home/iva/dipl/img/kcore_rep.png}
+\caption{Graphical representation of a fraction of the .fr domain of Web, courtesy of \citet{Alvarez-hamelin_k-coredecomposition:}. The vertices of the same closeness are represented with the same color.}
+\label{kcore}
+\end{figure}
 
 \section{Modelling global network structure}
-\subsection{Erd\~{o}s-Renyi graph model}
-%TODO
+\subsection{Erd{\H{o}}s R{\'{e}}nyi graph model}
 
-\subsection{Barabasi-Albert graph model}
-Barabasi-Albert model is the model of evolving a scale-free network, which uses a preferential attachment \cite{Dorogovtsev-2000} property. Starting from $m_0$ isolated vertices, at each time step new vertices with $m$ edges are added to the netowrk $m < m_0$. The new vertex will create an edge to the existing node $v_i$  with the probability proportional to its degree $k_i$. The Barabasi-Albert graph model produces power law distribution $P(k) \approx k ^{-3}$  in the limit of time. The average geodesic path  increases logarithmically with the size of the network.
+Traditionally, networks of complex topology have been described with the random graph theory of Erd{\H{o}}s and R{\'{e}}nyi \cite{Erdos1959}, but in the absence of data on large networks, the predictions of the ER theory were rarely tested in the real world.
+
+This random graph model assumes we start with $N$ vertices and connect each pair of vertices with probability $p$. The formation is independant across links so the probability of generating a network with exactly $m$ links is equal to $p^m(1 - p)^{\frac{N(N - 1)}{2} - m}$ and the expected number of links (or the average degree) is $\langle d \rangle = pN(N - 1) / 2$. 
+
+The degree distribution of the generated random network is 
+\begin{equation}
+P(d) = {{N - 1}\choose{d}}p^d (1 - p)^{n - 1 - d}.
+\end{equation}
+For large $n$, the degree distribution follows a Poisson distribution $P(d) = e ^{-\lambda}\lambda^d / d!$, where $$\lambda = N {{N - 1}\choose{d}} p^d (1 - p)^{N - 1 - d}.$$
+% Hence, the probability of finding a highly connected vertex (that is, of large $d$) decreases exponentially with $k$ for large $N$.
+
+In Erd{\H{o}}s-R{\'{e}}nyi model, maximum coreness is related to the average degree $\langle d \rangle$. Since the topology is very homogeneus, it is also expected most vertices will belong  to the same $k$-core that is also the highest. 
+
+While random network can observe features like diameters small relative to the network size, they lack certain features that are prevalent among complex networks, such as the high clustering and presence of communities. 
+
+\subsection{Barab\'{a}si-Albert graph model}
+
+Barab\'{a}si-Albert model is the model of evolving a scale-free network, which uses a preferential attachment property and thus creating a heterogeneous topology.  The preferential attachment mechanism is one of the generating mechanisms of scale-free networks \cite{Barabasi99emergenceof} and refers to building the network gradually where each new vertex tends to connect with the old vertices that are already well connected within the old network.
+
+The Barab\'{a}si-Albert graph is generated starting from $m_0$ isolated vertices. At each time step new vertices with $m$ edges are added to the network $m < m_0$. The new vertex will create an edge to the existing node $v_i$  with the probability proportional to its degree $k_i$.
+
+ The Barab\'{a}si-Albert graph model produces power law distribution $P(k) \approx k ^{-3}$  in the limit of time. The average geodesic path  increases logarithmically with the size of the network.
+
+By repetitively connecting each new node to the previous graph with exactly $m$ edges, we obtain a graph where any subgraph has a vertex of degree at most $m$ and the $k$-core of the graph is $m$. 
 
 \chapter{Epidemic process modelling}
 \label{EPM}
@@ -147,113 +193,113 @@ S + I \xrightarrow{p} 2I,\hspace{5mm}  I \xrightarrow{q} R.
 \label{transitionsSIR}
 \end{equation}
 
-In the SIR model, the infection and recovery process completely determine the epidemic evolution. The transitions (\ref{transitionsSIR}) occur spontaneously and independently in each time step. In discrete-time formulation an infected individual when meeting susceptible will infect the neighbouring susceptible with probability $p$ at each time step. The recovery probability $q$ is the probability infected individual will recover at any time step. The transition probabilities $p$ and $q$ are often assumed constant and equal for all nodes in the same epidemic process. 
+In the SIR model, the infection and recovery process completely determine the epidemic evolution. The transitions (\ref{transitionsSIR}) occur spontaneously and independently in each time step. In discrete-time formulation an infected individual when meeting susceptible will infect the neighbouring susceptible with probability $p$ at each time step. The recovery probability $q$ is the probability the infected individual will recover for each time step. The transition probabilities $p$ and $q$ are often assumed constant and equal for all nodes in the same epidemic process. 
 
 \subsection{Simulating the discrete SIR epidemic}
 
 For the contacting network represented by $G(N, L)$ and SIR parameters $p$ and $q$, we are able to simulate one time step of discrete SIR process. Let $s_t$, $i_t$ and $r_t$ denote sets of nodes that are respectively susceptible, infected and recovered after time step $t$. At time step $t$ all previously infected nodes $i_{t - 1}$ will try to infected their susceptible neighbours independently of each other and at the same time. Afterwards the passive recovery process will try to turn them to recovering nodes, each with probability $q$.
 
-This process can be simulated with NaiveSIR algorithm  \cite{NaiveSIR} by putting all the initially infected nodes in the queue. While traversing the nodes, we try to infect each neighbouring node. If the node gets infected, it gets pushed to the queue. SIR simulation of one time step $t$ is described by algorithm \ref{SIRStep}.
-\vspace{10mm}
+This process can be simulated with NaiveSIR algorithm  \cite{NaiveSIR} by putting all the initially infected nodes in the queue. While traversing the nodes, we try to infect each neighbouring node. When the new node gets infected, it gets pushed to the queue. SIR simulation of one time step $t$ is described by algorithm \ref{SIRStep}.
 
-%TODO complexity of NaiveSIR simulation
-\begin{algorithm}[H]
-% \SetAlgoLined
+For the algorithm complexity analysis standard big-$O$ notation is used (asymptotic upper bound within a constant factor) \cite{Graham:1994:CMF:562056}. The average  case running time of the NaiveSIR algorithm is equal to $O(\frac{E[X]\langle d \rangle}{q})$ where $E[X]$ denotes total expected number of infected nodes and $\langle d \rangle$ denotes the average node degree \cite{NaiveSIR}. 
+The space complexity of NaiveSIR algorithm with respect to the number of links $L$ is equal to $O(L)$ since the memory holds a contact network $G$ in a form of adjacency list ($O(L)$), queue of infected nodes $Iq$ ($O(N)$) and indicators of each compartment that are best implemented as a bitset data structure ($O(1)$). 
+
+\begin{algorithm}
+ \caption{One time step NaiveSIR simulation on graph $\mathbf{G}$.}
+ \label{SIRStep}
  \KwData{$\mathbf{G}$ - network, $(p, q)$ -parameters of the SIR model, 
   \textbf{$Iq$} - queue of infected nodes,    
   \textbf{$I$} - bitset of infected nodes, 
   \textbf{$S$} - bitset of susceptible nodes,
   \textbf{$R$} - bitset of recovered nodes}
-% \KwResult{New \textbf{$S$}, \textbf{$I$}, \textbf{$R$} -- a result of one time step of the SIR epidemic process}
- infected\_size = $Iq$.size()\;
- \While{(!$Iq$.empty() and infected\_size > 0)}{
-  infected\_size $=$ infected\_size $-1$\;
-  $u = Iq$.front()\; $Iq$.pop()\;
-  \ForEach {$v \in \mathbf{G}$.adj\_list($u$)}{
+ infected\_size = \textbf{size}($Iq$)\\
+ \For{$k = 1$ to infected\_size} {
+ \If{$Iq$ is empty} {
+ \textbf{break}\\
+ }
+ \textbf{dequeue}(u, Iq)\\
+  \ForEach {$v \in nei(u)$)}{
     \uIf{$v \in S$}{
-    let transmission $u \rightarrow v$ occur with probability  $p$\;
+    let transmission $u \rightarrow v$ occur with probability  $p$\\
     \If{$u \rightarrow v$ \textbf{occured}}{ 
-     \textbf{update}($I(v)$ and $S(v)$)\;
+     \textbf{update}($I(v)$ and $S(v)$)\\
      }}
   }
   let transmission $u \rightarrow v$ occur with probability  $q$\;
              \uIf{$u \rightarrow v$ \textbf{occured}}{ 
-      \textbf{update}($I(u)$ and $R(u)$)\;
+      \textbf{update}($I(u)$ and $R(u)$)\\
                 }\Else{ 
-  Iq.insert(u)\;
+                \textbf{enqueue}(u, Iq)\\
   }
   }
   \Return \{S, I, R\}
- \label{SIRStep}
- \caption{One time step NaiveSIR simulation on graph $\mathbf{G}$.}
 \end{algorithm}
 
 \subsection{Probability of one time step transition}
-Probability of one time step transition can be easily evaluated. Let $nei(v)$ indicate a set of all neighbours of node $v$,  $nei(V)$ a set of all neighbours of all nodes in set $V$ and  $nei_V(v) = nei(v) \cap V$ ,  a set of all neighbours of $v$ that are also in $V$. After $k$-th time step of the SIR process, the resulting $i_k$ and $r_k$ were given. At time step $k$, only initially active nodes $i_{k - 1}$ and their neighbours $nei(i_{k - 1})$ actively participate in the epidemic process. For each node $v$ in $i_{k - 1} \cup nei(i_{k - 1})$, one of four independent events may have happened during time step $k$:
+Probability of one time step transition can be easily evaluated. Let $nei(v)$ indicate a set of all neighbours of node $v$,  $nei(V)$ a set of all neighbours of all nodes in set $V$ and  $nei_V(v) = nei(v) \cap V$ ,  a set of all neighbours of $v$ that are also in $V$. After $k$-th time step of the SIR process, the resulting $i_k$ and $r_k$ were given. At time step $k$, only initially active nodes $i_{k - 1}$ and their neighbours $nei(i_{k - 1})$ actively participate in the epidemic process. For each node $v$ in $i_{k - 1} \cup nei(i_{k - 1})$, one of four independent events may have happened during time step $k$ and they are easily detectable based on $i_{k - 1}, r_{k - 1}, i_{k}$ and $r_{k}$:
 \let\labelitemi\labelitemii
 \begin{itemize}
 \item{$E_1:$ $\mathbf{if}$ $v \not\in i_{k - 1}$ and $v \in i_{k}$\\ \tab node $v$ was infected with probability $1 - (1 - p) ^ {nei_{i_{k-1}}(v)}$}
 \item{$E_2:$ $\mathbf{if}$ $v \not\in i_{k - 1}$ and $v \not \in i_{k}$\\ \tab node $v$ was not infected with probability $(1 - p)^{nei_{i_{k-1}}(v)}$}
-\item{$E_3:$ $\mathbf{if}$ $v \in i_{k - 1}$ and $v \not\in r_{k}$\\ \tab  node $v$ was recovered with probability $q$}
-\item{$E_4:$ $\mathbf{if}$ $v \in i_{k - 1}$ and $v \in r_{k}$ \\ \tab node $v$ was not recovered with probability $1 - q$}
+\item{$E_3:$ $\mathbf{if}$ $v \in i_{k - 1}$ and $v \in r_{k}$\\ \tab  node $v$ was recovered with probability $q$}
+\item{$E_4:$ $\mathbf{if}$ $v \in i_{k - 1}$ and $v \not\in r_{k}$ \\ \tab node $v$ was not recovered with probability $1 - q$}
 \end{itemize}
 
-Since all the events are independent and the sets corresponding to events $E_{1} - E_{4}$ are disjoint while completely covering the set of active nodes $i_{k - 1} \cup nei(i_{k - 1})$, the  conditional probability of the one time step SIR transition $P(i_k, r_k | i_{k - 1}, r_{k - 1})$ can be calculated as
+Since all the events $E_1 - E_4$ are independent and the sets of nodes corresponding to each event are disjoint while completely covering the set of active nodes $i_{k - 1} \cup nei(i_{k - 1})$, the  conditional probability of  one time step SIR transition $P(i_k, r_k | i_{k - 1}, r_{k - 1})$ can be calculated as
 \begin{equation}
 \begin{split}
 P(i_k, r_k | i_{k - 1}, r_{k - 1}) =  &\big[\Pi_{v \in E_1} (1 - (1 - p) ^ {nei_{i_{k-1}}(v)})\big]\big[\Pi_{v \in E_2} (1 - p)^{nei_{i_{k-1}}(v)} \big] \\& \cdot
-\big[\Pi_{v \in E_3} q\big]\big[ \Pi_{v \in E_4} (1 - q)\big]
+\big[\Pi_{v \in E_3} q\big]\big[ \Pi_{v \in E_4} (1 - q)\big].
 \end{split}
+\label{fISS}
 \end{equation}
-where $nei_{i_{k-1}}(v)$ is the set of all neighbours of nodes $i_{k - 1}$ -- the ones infected at the beginning of time step $k$.
+ $nei_{i_{k-1}}(v)$ denotes the set of all neighbours of $v$ that were also infected  at the beginning of time step $k$ (set $nei(v) \cap i_{k - 1}$). 
 
 \section{Epidemic models as social contagion processes}
-Even though infectious diseases represent the central focus of epidemic modelling, the model where an individual is strongly influenced by the interaction with peers is present in several other domains, especially in social context in the diffusion of information, the propagation of rumour and adoption of innovation or behaviours.  Since the social contacts can in these domains generate epidemic-like outbreaks, simple models for information diffusion are epidemic models modified to specific features of social contagion. The crucial difference to pathogen spreading is that transmission of information involves intentional acts by both the sender and the receiver and it is often beneficial for both participants.
+Even though infectious diseases represent the central focus of epidemic modelling, the model where an individual is strongly influenced by the interaction with its peers is present in several other domains, especially in social context in the diffusion of information, the propagation of rumour and adoption of innovation or behaviours.  Since the social contacts can in these domains generate epidemic-like outbreaks, simple models for information diffusion are epidemic models modified to specific features of social contagion. The crucial difference to pathogen spreading is that transmission of information involves intentional acts by both the sender and the receiver and it is often beneficial for both participants.
 
-\subsection{Rumour spreading with the ISS model}
+\subsection{Rumour spreading with ISS model}
 The need to study rumour spreading presents itself in a number of important technological and commercial applications where it is desirable to spread the "epidemic" as fast and as efficient as possible.  In examples such as rumour based protocols for resource discovery and marketing campaigns that use rumour like strategies (viral marketing)  the problem translates to design of an epidemic algorithm in such a way that the given information reaches as much nodes as possible, similarly to a rumour.
 
 Models for rumour spreading are variants of the SIR model in which the recovery process does not occur spontaneously, but rather is a consequence of interactions. The modification mimics the idea it is worth spreading the rumour as long as it is novel for the recipient. This process can be formalized as a model where each of  $N$ members of the contacting network can be a part of one of three compartments: \textbf{ignorant (S), spreader (I) and stifler (R)}. Ignorants have not heard the rumour and are susceptible to being informed. Spreaders are actively spreading the rumour, while stiflers know about the rumour but they're not  spreading it.
  
 The spreading process evolves by direct contacts of spreaders with others in the population. When a spreader meets an ignorant, the latter turns into a new spreader with probability $a$. When a spreader meets another spreader or a stifler, the former spreader turns into stifler with probability $b$ and the latter remains unchanged. This model is known as the ISS model (Ignorant-Spreader-Stifler) \cite{Moreno2004}. The possible events can be represented as 
-\begin{equation*}
+\begin{equation}
 S + I \xrightarrow{\alpha} 2I,\hspace{5mm}  R + I \xrightarrow{\beta} 2R,  \hspace{5mm} 2I \xrightarrow{\beta} R + I.
-\end{equation*}
+\end{equation}
 
-Since we examine the spreading process in discrete time, at each time step, the current spreaders try to interact with their neighbours. A modification of the NaiveSIR algorithm for rumour spreading simulation of one time step $t$ is described by algorithm \ref{ISSStep}.
-
-\begin{algorithm}[H]
+Since we are examining the spreading process in discrete time, at each time step the current spreaders try to interact with their neighbours. A modification of the NaiveSIR algorithm for rumour spreading simulation of one time step $t$ is described by algorithm \ref{ISSStep}. 
+ 
+\begin{algorithm}
+\caption{One time step of ISS simulation with modified NaiveSIR algorithm on graph $\mathbf{G}$.}
+ \label{ISSStep}
  \KwData{$\mathbf{G}$ - network, $(a, b)$ - parameters of the ISS model, 
   \textbf{$Iq$} - priority queue of spreader nodes,    
   \textbf{$I$} - bitset of spreader nodes, 
   \textbf{$S$} - bitset of ignorant nodes,
   \textbf{$R$} - bitset of stifler nodes }
-% \KwResult{New \textbf{$S$}, \textbf{$I$}, \textbf{$R$} --  a result of one time step in the rumour spreading process}
- stifler\_size = $Iq$.size()\;
- \While{(!$Iq$.empty() and stifler\_size > 0)}{
-  stifler\_size $=$ stifler\_size $-1$\;
-  $u = Iq$.front()\; $Iq$.pop()\;
-  %\If{$u \not\in I$}{\textbf{continue}\;}
-  %\textbf{shuffle}($\mathbf{G}$.adj\_list($u$)\;
-  \ForEach {$v \in \mathbf{G}$.adj\_list($u$)}{
+ stifler\_size = \textbf{size}($Iq$)\\
+ \For{$k = 1$ to stifler\_size} {
+ \If{$Iq$ is empty} {
+ \textbf{break}\\
+ }
+ \textbf{dequeue}(u, Iq)\\
+  \ForEach {$v \in nei(u)$}{
     \uIf{$v \in S$}{
-    let transmission $u \rightarrow v$ occur with probability  $a$\;
+    let transmission $u \rightarrow v$ occur with probability  $a$\\
     \If{$u \rightarrow v$ \textbf{occured}}{ 
-     \textbf{update}($I(v)$ and $S(v)$)\;
+     \textbf{update}($I(v)$ and $S(v)$)\\
      }}\uElse{
-         let transmission $u \rightarrow v$ occur with probability  $b$\;
+         let transmission $u \rightarrow v$ occur with probability  $b$\\
              \If{$u \rightarrow v$ \textbf{occured}}{ 
-      \textbf{update}($I(u)$ and $R(u)$)\;
-      \textbf{break}\;
+      \textbf{update}($I(u)$ and $R(u)$)\\
                 }}
   }
   \If{$u \in$ I}{
-  Iq.insert(u)\;
+  \textbf{enqueue}(u, Iq)\\
   }
   }
   \Return \{S, I, R\}
- \label{ISSStep}
- \caption{One time step simulation of rumour spreading under ISS model on graph $\mathbf{G}$.}
 \end{algorithm}
 
 \chapter{Patient zero -- single source epidemic detection}
@@ -261,9 +307,9 @@ Since we examine the spreading process in discrete time, at each time step, the 
 
 In accordance with \cite{Nino}, we will focus on a patient zero problem given snapshot of population at time $T$ and complete knowledge of underlying contacting network modelled by $G$ with the assumption the epidemic has started from a single source node and that it is governed by the SIR process with known $p$ and $q$.  The estimators proposed in \cite{Nino} will be presented in this chapter, while the newly proposed estimators based on importance sampling  technique will be presented in the next chapter.
 
-Let random vector $\vec S = (S(1), \ldots, S(N))$ indicate the nodes that got infected up to a predefined temporal threshold $T$ with SIR$(p, q)$ epidemic process on network $G$ with $N$ nodes. $S(i)$ is a Bernoulli random variable with the value $1$ if the node $i$ got infected before time $T$ from the start of the epidemic process. We observe one realization $\vec s_*$ of $\vec S$ and we want to infer which nodes from the set of infected or recovered nodes $\Theta = \{\theta_1, \theta_2, \ldots, \theta_m \}$ are the most likely to be the source of the epidemic process.  The finite set of possible source nodes $\Theta$ is determined by realization $\vec s_*$.
+Let random vector $\vec S = (S(1), \ldots, S(N))$ indicate the nodes that got infected up to a predefined temporal threshold $T$ with SIR$(p, q)$ epidemic process on network $G$ with $N$ nodes. $S(i)$ is a Bernoulli random variable with the value $1$ if the node $i$ got infected before time $T$ from the start of the epidemic process. We observe one realization $\vec s_*$ of $\vec S$ (the snapshot at time $T$). The finite set of possible source nodes $\Theta$ is determined by realization $\vec s_*$. We want to infer which nodes from the set of infected or recovered nodes $\Theta = \{\theta_1, \theta_2, \ldots, \theta_m \}$ are most likely to be the source of the epidemic process.  
 
-A maximum aposteriori probability estimate (MAP) is the node with the highest probability for being the source of the epidemic spread for a given realization $\vec s_*$: 
+A maximum aposteriori probability estimate (MAP) is the node with the highest probability for being the source of the epidemic spread for  given target realization $\vec s_*$: 
 \begin{equation}
 \hat{\theta}_{MAP} = \text{arg max}_{\theta_i \in \Theta} P(\Theta = \theta_i | \vec{S} = \vec s_*)
 \label{MAP}
@@ -288,133 +334,135 @@ h_n = \frac{1}{n} \sum_{j = 1}^{n} h(X_j).
 \end{equation}
 The convergence of $h_n$ towards $\mathbf{E_f[\textit{h(X)}]}$ is assured by the Strong Law of Large Numbers.
 
-Inferring the probability  $P(\vec R = \vec r_* | \Theta = \theta_i)$ up to multiplicative constant is an integration problem equivalent to expectation of Kronecker delta function
- $\delta(\vec R) = 1\{\vec R = \vec r_{*}\}$ where $\vec R$ is a random variable governed by probability $P(\vec R  | \Theta = \theta_i)$. 
+Inferring the probability  $P(\vec S = \vec s_* | \Theta = \theta_i)$ up to multiplicative constant is an integration problem equivalent to expectation of Kronecker delta function
+ $\delta(\vec S) = 1\{\vec S = \vec s_{*}\}$ where $\vec S$ is a random variable governed by probability distribution $P(\vec S  | \Theta = \theta_i)$. 
  Let $m_i$ denote estimation of expected number of hits for a fixed source $\theta_i$ estimated using Monte Carlo technique:
 \begin{equation}
- m_i = \sum_{j = 1}^{n} 1\{\vec R_i = r_{*}\}
+ m_i = \sum_{j = 1}^{n} 1\{\vec S_i = s_{*}\}
 \label{mi}
 \end{equation}
-where $\vec R_i$ are drawn from $P(\vec R | \Theta = \theta_i)$. With Direct Monte Carlo estimator $m_i$ is obtained by simulating epidemic process up to time $T$ starting from a single infected node $\theta_i$ and checking whether the generated realization $\vec R_i$ coincides with $\vec r_*$. Since $m_i$ is estimation of $P(\vec R = \vec r_* | \Theta = \theta_i)$ up to multiplicative constant $1/n$ for all $\theta_i \in S$, we derive Direct Monte Carlo MAP estimator based on the estimation of probability $P(\Theta = \theta_i | \vec R = \vec r_*)$ combining (\ref{mi}) with (\ref{MAP_pravi}): 
+where $\vec S_i$ are drawn from $P(\vec S | \Theta = \theta_i)$. 
+
+The estimate $m_i$ is obtained using Direct Monte Carlo estimator by simulating epidemic process up to time $T$ starting from a single infected node $\theta_i$ and checking whether the generated realization $\vec S_i$ coincides with $\vec s_*$. Since $m_i$ is estimation of $P(\vec S = \vec s_* | \Theta = \theta_i)$ up to multiplicative constant $1/n$ for all $\theta_i \in \Theta$, we derive Direct Monte Carlo MAP estimator based on the estimation of probability $P(\Theta = \theta_i | \vec S = \vec s_*)$ combining (\ref{mi}) with (\ref{MAP_pravi}): 
 \begin{equation}
-\hat{P_i}^n = \hat{P}(\vec R = \vec r_* | \Theta = \theta_i) = \frac{m_i}{m}
+\hat{P_i}^n = \hat{P}(\Theta = \theta_i | \vec S = \vec s_*) = \frac{m_i}{m}
 \end{equation}
 where $m = \sum_{j = 1}^{n} m_j$ .
 
-If the size of realization $\vec r_*$ is big, the number of simulations required to obtain reliable estimations can be large. Since the estimations for different source node candidates are independent, the computations can be parallelised.  
+If the size of realization $\vec s_*$ is big, the number of simulations required to obtain reliable estimations can be large. Since the estimations for different source node candidates are independent, the computations can be parallelised.  
 
-Additionally for the SIR model, a prunning mechanism can be incorporated. If a sampling simulation infects a node that was not infected during the target epidemic  represented by the realization $r_*$, it is safe to stop the sampling simulation prior to ending time $T$ and call a sample unequal to target realization $r_*$.
+Additionally for the SIR model, a prunning mechanism can be incorporated. If a sampling simulation infects a node that was not infected during the target epidemic  represented by the realization $s_*$, it is safe to stop the sampling simulation prior to ending time $T$ and call the partial sample unequal to target realization $s_*$.
 
-The accuracy of direct Monte Carlo approximations are controlled by convergence conditions. Upon estimating two source PDF's, $\hat{P}_i^n$ and $\hat{P}_i^{2n}$ with $n$ and $2n$ independent simulations, respectively. The PDF's are said to converge when the following conditions are satisfied:
+The accuracy of direct Monte Carlo estimation is controlled by convergence conditions. Upon estimating two source PDF's $\hat{P}_i^n$ and $\hat{P}_i^{2n}$ with $n$ and $2n$ independent simulations respectively, the distribution estimation is said to converge when the following conditions are satisfied:
 \begin{equation}
-| \hat{P}_i^{2n} - \hat{P}_i^{n} | / \hat{P}_{2n} \leq c, \hspace{1mm} | \hat{P}_i^{2n} - \hat{P}_i^{n} | \leq c \hspace{5mm} \forall \theta_i \in S.
+| \hat{P}_i^{2n} - \hat{P}_i^{n} | / \hat{P}_{2n} \leq c, \hspace{1mm} | \hat{P}_i^{2n} - \hat{P}_i^{n} | \leq c \hspace{5mm} \forall \theta_i \in \Theta.
 \label{DMCConv}
 \end{equation}
 
-%TODO cite alg somewhere
-\vspace{5mm}
 \begin{algorithm}[H]
 \ \KwData{$\mathbf{G}$ - network, $(p, q)$ - parameters of the SIR process, 
-  $\vec r_*$ - target realization,    
+  $\vec s_*$ - target realization,    
   $T$ - temporal threshold, 
-  $\theta_i$ - proposed initial source node,
+  $\theta_i$ - proposed source node,
   $n$ - number of simulations}
- \KwResult{ $m_i$ - estimated expected number of realizations started from $\theta_i$ and completely corresponding to $r_*$ }
- $m_i = 0$\; 
- \For{$s = 1$ to $n$} {
-   \For{$t = 1$ to $n$} {
-    Run one SIR simulation $(p, q, \theta_i)$ for time step $t$ and obtain  
-    $r_i^t$.\; 
-    \If{$\hspace{3mm} \exists j \in N: (r_i^t(j) == 1$ \textbf{and} $r_*(j) == 0)$} {
-   \textbf{break}\;
+% \KwResult{ $m_i$ - estimated expected number of realizations started from $\theta_i$ and completely corresponding to $s_*$ }
+ $m_i = 0$\\ 
+ \For{$d = 1$ to $n$} {
+   \For{$t = 1$ to $T$} {
+    Run one SIR simulation $(p, q, \theta_i)$ for time step $t$ and obtain
+    $\vec S_t^{(d)}$ \\
+    \If{$\hspace{3mm} \exists j \in N: (S_t(j) == 1$ \textbf{and} $s_*(j) == 0)$} {
+   \textbf{break}
     }
    }
-    \If{$r_i^T$ \textbf{equals} $r_*$} {
-  $m_i = m_i + 1$\;
+    \If{$\vec S_T^{(d)}$ \textbf{equals} $\vec s_*$} {
+  $m_i = m_i + 1$\\
  }
  }
   \Return $m_i$
  \label{DMC_lag}
- \caption{Direct Monte Carlo estimation $m_i$ of expected number of realization hits completely corresponding to $r_*$  for a fixed source $\theta_i$.}
+ \caption{Direct Monte Carlo estimation of expected number of realizations completely corresponding to $\vec s_*$ after $T$ time steps  for a fixed source $\theta_i$.}
 \end{algorithm}
-  \vspace{5mm}
 
-
-\section{The Soft Margin estimator}
-
-Let $\vec r^{(j)}_{\theta_i}$ denote $j$-th sample (outcome) obtained by Monte Carlo simulation of contagion process with source node $\theta_i$ and duration of $T$ time steps. $\vec r^{(j)}_{\theta_i}$ is one realization of random binary vector $\vec R_{\theta_i}$ that describes the outcome of epidemic process. A similarity measure $\varphi : (\vec R_{\theta_i} \times \vec R_{\theta_i}) \rightarrow [0, 1 ]$  can  be defined between any two  realizations of $\vec R_{\theta_i}$, for example,  as the Jaccard similarity function:
+\section{Soft Margin estimator}
+Let $\vec S^{(j)}_{\theta}$ denote $j$-th sample (outcome) obtained by Monte Carlo simulation of contagion process with source node $\theta$ and duration of $T$ time steps. $\vec S^{(j)}_{\theta}$ is one realization of random binary vector $\vec S_{\theta}$ that describes the outcome of an epidemic process. A similarity measure $\varphi : (\vec S_{\theta} \times \vec S_{\theta}) \rightarrow [0, 1 ]$  can  be defined between any two  realizations of $\vec S_{\theta}$. For example,  $\varphi$ can be defined as the Jaccard similarity function:
 \begin{equation}
-\varphi(\vec r_1, \vec r_2) = \frac{\vec r_1 \cap \vec r_2}{\vec r_1 \cup \vec r_2 } = \frac{\sum_{j = 1}^{N} (r_1(j) = 1 \hspace{2mm} \text{and} \hspace{2mm} r_2(j) = 1) }{\sum_{j = 1}^{N} (r_1(j) = 1 \hspace{2mm} \text{or} \hspace{2mm} r_2(j) = 1) }.
+\varphi(\vec s_1, \vec s_2) = \frac{\vec s_1 \cap \vec s_2}{\vec s_1 \cup \vec s_2 } = \frac{\sum_{j = 1}^{N} (s_1(j) = 1 \hspace{2mm} \text{and} \hspace{2mm} s_2(j) = 1) }{\sum_{j = 1}^{N} (s_1(j) = 1 \hspace{2mm} \text{or} \hspace{2mm} s_2(j) = 1) }.
 \label{JaccardPHI}
 \end{equation}
 
-Moreover, we  can define a discrete random variable $\varphi(\vec r_*, \vec R_{\theta})$ that measures the similarity between a fixed realization $r_*$ and a random realization from $\vec R_{\theta}$. Let PDF of that random variable be $f_\theta(x)$ where $x = \varphi(\vec r_*, \vec r_{\theta})$. Unbiased estimator for PDF can be obtained with Monte Carlo method from $n$  samples as 
+Moreover, we  can define a discrete random variable $\varphi(\vec s_*, \vec S_{\theta})$ that measures the similarity between fixed realization $\vec s_*$ and random realization from $\vec S_{\theta}$. Let PDF of that random variable be $f_\theta(x)$ where $x = \varphi(\vec s_*, \vec S_{\theta})$. Unbiased estimator for the PDF can be obtained with Monte Carlo method from $n$  samples as 
 \begin{equation}
-f_{\theta}(x) = \int_0^1 p_k \delta(x - x_k)dx \approx \frac{1}{n} \sum_{i = 1}^{n} \delta(x - \varphi(\vec r_*, \vec r_{\theta} ^{(i)}))
+f_{\theta}(x) = \int_0^1 p_k \delta(x - x_k)dx \approx \frac{1}{n} \sum_{i = 1}^{n} \delta(x - \varphi(\vec s_*, \vec S_{\theta} ^{(i)}))
 \label{Fapprox}
 \end{equation}
-where $\delta(x)$ denotes the Dirac delta function. In the integral we observe a series of probabilities $p_1, p_2, \ldots, p_d$ corresponding to each realization of $\varphi(\vec r_*, \vec R_{\theta})$. With Monte Carlo method, we observe the PDF definition as an integration problem and sample from this discrete distribution $\{p_1, \ldots, p_d\}$ to obtain an estimate.
+where $\delta(x)$ denotes the Dirac delta function. In the integral definition we observe a series of probabilities $p_1, p_2, \ldots, p_d$ corresponding to each realization of discrete random variable $\varphi(\vec s_*, \vec S_{\theta})$. With Monte Carlo method, we take the PDF definition as an integration problem (\ref{exp}) and sample from this discrete distribution $\{p_1, \ldots, p_d\}$ to obtain the PDF estimate.
 
 \textbf{The Soft Margin estimator} is defined as 
 \begin{equation}
-\hat{P}(\vec R = \vec r_* | \Theta = \theta) = \int_0^1 w_a(x)\hat{f}_\theta(x)dx
+\hat{P}_a(\vec S = \vec s_* | \Theta = \theta) = \int_0^1 w_a(x)\hat{f}_\theta(x)dx
 \label{SMF1}
 \end{equation}
-where $w_a(x)$ is a weighting function and $f_\theta(x)$ is the PDF function of the random variable $\varphi(\vec r_*, \vec R_\theta)$. For $w_a(x)$, \cite{Nino} proposed a Gaussian weighting form $w_a(x) = e^{-(x -1)^2 / a ^2}$. In this way, the problem definition was altered to estimating the number of relizations with similarity in the interval defined by Gaussian function $w_a(x)$ around $\varphi = 1$ , whereas estimating the number of realizations with similarity strictly equal to $\varphi = 1$ as with Direct Monte Carlo method. In the limit where $a \rightarrow 0$ unbiased direct Monte Carlo estimate is obtained.
+where $w_a(x)$ is a weighting function and $f_\theta(x)$ is the PDF function of the random variable $\varphi(\vec s_*, \vec S_\theta)$. For $w_a(x)$ \citet{Nino} proposed a Gaussian weighting form $w_a(x) = e^{-(x -1)^2 / a ^2}$. In this way, the problem definition is altered to estimating the number of realizations with similarity to $s_*$ in the interval around $\varphi = 1$  defined by Gaussian function $w_a(x)$  (Figure \ref{wax}), as opposed to estimating the number of realizations with similarity strictly equal to $\varphi = 1$ with Direct Monte Carlo method. In the limit where $a \rightarrow 0$, unbiased direct Monte Carlo estimate is obtained.
+\begin{figure}
+\center
+\includegraphics[scale=0.5]{/home/iva/dipl/img/fi_contour.png}
+\caption{Contour plot of Gaussian weighting function $w_a(x) = e^{-(x -1)^2 / a ^2}$.}
+\label{wax}
+\end{figure}
 
-The Soft Margin formula (\ref{SMF1}) can be further simplified combining with (\ref{Fapprox}):
+The Soft Margin formula (\ref{SMF1}) can be further simplified by combining with (\ref{Fapprox}):
 \begin{equation}
 \begin{aligned}
-\hat{P}(\vec R = \vec r_* | \Theta = \theta) &= \int_0^1 w_a(x)\hat{f}_\theta(x)dx \\ &=
-\int_0^1 w_a(x) \frac{1}{n} \sum_{i = 1}^{n}\delta(x - \varphi(\vec r_*, \vec r_{\theta}^{(i)})) dx,
+\hat{P}_a(\vec S = \vec s_* | \Theta = \theta) &= \int_0^1 w_a(x)\hat{f}_\theta(x)dx \\ &=
+\int_0^1 w_a(x) \frac{1}{n} \sum_{i = 1}^{n}\delta(x - \varphi(\vec s_*, \vec S_{\theta}^{(i)})) dx,
 \end{aligned}
 \end{equation}
-and further by using the property of delta distribution $\int_{-\infty}^{\infty} f(x)\delta(x - b)dx = f(b)$:
+and further by using the property of Dirac delta function $\int_{-\infty}^{\infty} f(x)\delta(x - b)dx = f(b)$:
 \begin{equation}
 \begin{aligned}
-\hat{P}(\vec R = \vec r_* | \Theta = \theta) &= \frac{1}{n} \sum_{i = 1}^{n} \int_0^1 w_a(x) \delta(x - \varphi(\vec r_*, \vec r_{\theta}^{(i)})) dx  \\ &= \frac{1}{n} \sum_{i = 1}^{n}  w_a(\varphi(\vec  r_*, \vec r_\theta^{(i)})) \\ &= \frac{1}{n} \sum_{i = 1}^{n} e ^{\frac{(\varphi_i -1)^2}{a ^2}}.
+\hat{P}_a(\vec S = \vec s_* | \Theta = \theta) &= \frac{1}{n} \sum_{i = 1}^{n} \int_0^1 w_a(x) \delta(x - \varphi(\vec s_*, \vec S_{\theta}^{(i)})) dx  \\ &= \frac{1}{n} \sum_{i = 1}^{n}  w_a(\varphi(\vec  s_*, \vec S_\theta^{(i)})) \\ &= \frac{1}{n} \sum_{i = 1}^{n} e ^{\frac{(\varphi_i -1)^2}{a ^2}}.
 \end{aligned}
 \end{equation}
 
-Note that it's not needed to determine constant $a$ in advance. The parameter $a$ can be chosen as the infinum of the set of parameters for which the source probability distribution estimates $\hat{P_a}(\Theta = \theta_i | \vec R = \vec r_*)$ have converged under the convergence property from (\ref{DMCConv}). 
+Note that it's not needed to determine constant $a$ in advance. The parameter $a$ can be chosen as the infinum of the set of parameters for which the source probability distribution estimates $\hat{P_a}(\Theta = \theta_i | \vec S = \vec s_*)$ have converged under the convergence property (\ref{DMCConv}). 
 
-%TODO cite alg somewhere
+Additionally, for a fixed number of simulations $n$, PDF's  based on different parameters $a$ can be estimated with one set of samples. 
+
 \vspace{5mm}
 \begin{algorithm}[H]
  \KwData{$\mathbf{G}$ - network, $(p, q)$ - parameters of the SIR process, 
-  $\vec r_*$ - target realization,    
+  $\vec s_*$ - target realization,    
   $T$ - temporal threshold, 
-  $\theta_i$ - proposed initial source node,
+  $\theta_i$ - proposed source node,
   $n$ - number of simulations,
-  $a$}
- \KwResult{ $\hat{P_a}(\vec R = \vec r_* | \Theta = \theta_i)$}
- \For{$s = 1$ to $n$} {
+  $a$ - Soft Margin parameter}
+ %\KwResult{ $\hat{P_a}(\vec R = \vec r_* | \Theta = \theta_i)$}
+ \For{$i = 1$ to $n$} {
     Run SIR simulation $(p, q, \theta_i)$ for $T$ time steps and obtain  
-    $\vec r_i^T$\;
-    Calculate and save $\varphi_i = \varphi(\vec r_*, \vec r_i^T)$\;
+    $\vec S_T^{(i)}$\\
+    Calculate and save $\varphi_i = \varphi(\vec s_*, \vec S_T^{(i)})$\\
  }
-  Calculate $\hat{P}(\vec R = \vec r_* | \Theta = \theta_i) = \frac{1}{n} \sum_{i = 1}^{n} e ^ {\frac{-(\varphi_i -1)^2}{a^2}}$\;
-  \Return $\hat{P}(\vec R = \vec r_* | \Theta = \theta_i)$
- \label{DMC_lag}
- \caption{Soft Margin estimation of $P(\vec R = \vec r_* | \Theta = \theta_i)$ for a fixed source $\theta_i$.}
+  Calculate $\hat{P}(\vec S = \vec s_* | \Theta = \theta_i) = \frac{1}{n} \sum_{i = 1}^{n} e ^ {\frac{-(\varphi_i -1)^2}{a^2}}$\\
+  \Return $\hat{P}(\vec S = \vec s_* | \Theta = \theta_i)$
+ %\label{DMC_lag}
+ \caption{Soft Margin approximation of $P(\vec S = \vec s_* | \Theta = \theta_i)$ for a fixed source $\theta_i$.}
 \end{algorithm}
  \AlgoDontDisplayBlockMarkers%
 
-\section{Time complexity of estimators}
-%TODO 
+\section{Time complexity of Direct Monte Carlo and Soft Margin estimators}
+The average run time complexity $\overline{RT}$ of source detection Monte Carlo estimators (Direct Monte Carlo and Soft Margin) is $\overline{RT} \propto m \times n \propto \overline{RT}_{M}$, where $m$ denotes the number of potential sources in the observed  realization, $n$ the number of samples of the random variable $\vec S_{\theta}$  and $\overline{RT}_M$ denotes the average run-time complexity of sampling one realization from contagion process $M$ \cite{Nino}.
 
-\chapter{Sequential Importance Sampling estimator}
+Note that in the worst-case scenario the number of potential sources is proportional to the network size, but in reality we are mostly interested in source detection problems in which the number of potential sources is much smaller than the network size. 
+
+Additionally, different Monte Carlo estimators have different convergence properties with respect to the number of samples $n$. With $c = 0.05$ and convergence conditions from (\ref{DMCConv}), the Soft Margin estimator converges for $n \in [10^4, 10^6]$ on the benchmark grid samples on which the Direct Monte Carlo needs $n\in[10^6, 10^8]$ simulations to converge.
+
+\chapter{Importance sampling based single source detection}
 \label{IS}
-%TODO [] results for SIS with prunning, 
-%     [] add another version of prunning, 
-%     [] time accuracy correlation, 
-%     [] experimental complexity / duration results, a
-%     [] add soft margin to SIS, 
-%     [] Metropolis - Hastings
-%     [] Incorporte vc2 and/or ESS in the result analysis
+
 \section{Importance sampling}
 
-\textbf{Importance sampling} is a technique for estimating properties of a particular distribution with samples generated from a different distribution than the one of interest. The technique is used with Monte Carlo method as a variance reduction technique since we usually choose to sample from the distribution that is biased towards the realizations that have more impact on the parameters being estimated.
+Importance sampling is a technique for estimating properties of a particular distribution with samples generated from a different distribution than the one of interest. The technique is used with Monte Carlo method as a variance reduction technique since we usually choose to sample from the distribution that is biased towards the realizations that have more impact on the parameters being estimated.
 
 In other words, the method of importance sampling is estimation of integration problem (\ref{exp}) based on generating a sample $X_1, \ldots, X_m$ from a given biased distribution $\textit{g}$ when in fact the samples $X_i$ come from the target distribution $\textit{f}$:
 \begin{equation}
@@ -434,16 +482,17 @@ or with a weighted estimate
 When using the weighted estimate, we only need to know the ratio $f(\mathbf{x})/g(\mathbf{x})$ up to a multiplicative constant. Although inducing a small bias, the weighted estimate often has a smaller mean squared error than the unbiased one.
 
 \subsection{Measuring the quality of importance distribution}
-By properly choosing $g(\cdot)$, one can reduce the variance of the estimate substantially. In order to make the estimation error small, one wants to choose $g(\mathbf{x})$ as close in shape to $f(\mathbf{x})h(\mathbf{x})$ as possible. The efficiency of such method is difficult to measure. Effective sample size (ESS) is commonly used to measure how different the importance distribution is from the target  distribution. %TODO Explain in more detail.
+By properly choosing $g(\cdot)$, one can reduce the variance of the estimate substantially. In order to make the estimation error small, one wants to choose $g(\mathbf{x})$ as close in shape to $f(\mathbf{x})h(\mathbf{x})$ as possible. The efficiency of such method is difficult to measure. 
 
+Effective sample size (ESS) is commonly used to measure how different the importance distribution is from the target  distribution. %TODO Explain in more detail.
 Suppose we have $m$ independent samples generated from $g(\mathbf{x})$. The ESS of this method is defined as 
 \begin{equation}
 \text{ESS}(m) = \frac{m}{1 + var_g[w(\mathbf{x})]}.
 \end{equation}  
 The variance here is estimated as a square of the coefficient of variation of the weights:
-\begin{equation*}
+\begin{equation}
 cv^2 = \frac{\sum_{j=1}^{m} (w^{(j)} - \bar{w})^2}{(m - 1)\bar{w}^2}
-\end{equation*}
+\end{equation}
 where $\bar{w}$ is sample average of the $w^{(j)}$. The ESS measure of efficiency can be partially justified by the delta method \cite{Liu}. %TODO more
 
 \subsection{Rejection control and weighting}
@@ -453,7 +502,6 @@ Suppose we have drawn samples $\mathbf{x}^{(1)}, \ldots, \mathbf{x}^{(m)}$ from 
 \vspace{5mm}
 
 \begin{algorithm}[H]
-\textbf{Rejection Control (RC)}\\
 \For{$j = 1, \ldots, m,$}{
   accept $\mathbf{x}^{(j)}$ with probabilty 
 $r^{(j)} =  \min  \Big \{ {1, \frac{w^{(j)}}{c}} \Big \}$\\
@@ -463,7 +511,7 @@ q_c = \int \min  \Big \{ {1, \frac{w^{(j)}}{c}} \Big \} g(\mathbf{x}) d\mathbf{x
 \label{qc}
 \end{equation}}
 }
- \caption{\textbf{Rejection Control (RC)}}
+ \caption{Rejection Control (RC)}
  \label{RC}
 \end{algorithm}
 \vspace{5mm}
@@ -501,27 +549,28 @@ The sequential importance sampling method can then be defined as follows:
 \vspace{5mm}
 \begin{algorithm}[H]
 \caption{SIS Step}
-$1.$ Draw $X_t=x_t$ from $g_t(x_t | \mathbf{x_{t-1}})$, and let $\mathbf{x}_t = (\mathbf{x}_{t - 1}, x_t)$.\\
-$2.$ Compute $w_t(\mathbf{x}_t) = w_{t - 1}(\mathbf{x}_{t - 1})\frac{f(x_t | \mathbf{x}_{t - 1})}{g(x_t | \mathbf{x})_{t - 1})}$.\\
+$1.$ Draw $X_t$ from $g_t(x_t | \mathbf{x_{t-1}})$, and let $\mathbf{x}_t = (\mathbf{x}_{t - 1}, x_t)$.\\
+$2.$ Compute $w_t(\mathbf{x}_t) = w_{t - 1}(\mathbf{x}_{t - 1})\frac{f(x_t | \mathbf{x}_{t - 1})}{g(x_t | \mathbf{x}_{t - 1})}$.\\
 \label{SIS_step}
 \end{algorithm}
 \vspace{5mm}
 When we observe that $w_t$ is getting too small, we can choose to reject the sample halfway and restart again.
 
-\subsection{Improving the SIS procedure - rejection control}
-\label{SIS_RC}
-The rejection control method \textbf{RC} can be applied dynamically to improve the  \textbf{SIS} scheme. Suppose a sequence of "check points," $0 < t_1 < t_2 < \ldots < t_k \leq d$ and a sequence of threshold values $c_1, \ldots, c_k$, are given in advance. 
-\begin{itemize}
-\item{At each check point $t_j$ start \textbf{RC}$(t_k)$ with the threshold value $c = c_j$ . If the partial sample $(x_1, \ldots, x_{t_j})$ has a weight $w_{t_j}$, we accept it with probability $\min \{ 1, w_{t_j}/c_j \}$. If accepted, replace its weight by $w^{*}_{t_j} = \max \{ w_{t_j}, c_j \}$}
-\item{For each rejected partial sample, restart from the beginning again and let it pass through all the check points.}
-\end{itemize}
+%TODO will not implement
+%\subsection{Improving the SIS procedure - rejection control}
+%\label{SIS_RC}
+%The rejection control method \textbf{RC} can be applied dynamically to improve the  \textbf{SIS} scheme. Suppose a sequence of "check points," $0 < t_1 < t_2 < \ldots < t_k \leq d$ and a sequence of threshold values $c_1, \ldots, c_k$, are given in advance. 
+%\begin{itemize}
+%\item{At each check point $t_j$ start \textbf{RC}$(t_k)$ with the threshold value $c = c_j$ . If the partial sample $(x_1, \ldots, x_{t_j})$ has a weight $w_{t_j}$, we accept it with probability $\min \{ 1, w_{t_j}/c_j \}$. If accepted, replace its weight by $w^{*}_{t_j} = \max \{ w_{t_j}, c_j \}$}
+%\item{For each rejected partial sample, restart from the beginning again and let it pass through all the check points.}
+%\end{itemize}
 
-\subsection{Improving the SIS procedure - resampling}
-When the system grows, the variance of the importance weights $w_t$ increases. After a certain number of steps, many of the weights become very small and a few very large. In that situation one may use a \textbf{resampling} strategy. 
+\subsection{Improving the SIS procedure with resampling}
+When the system grows, the variance of the importance weights $w_t$ increases. After a certain number of steps, many of the weights become very small and a few very large. In that situation one may use a resampling strategy. 
 
 Suppose at step $t$ we have a collection of $m$ partial samples of length $t, S_t = \{ \mathbf{x}_{t}^{(j)}, j = 1, \ldots, m \}$ which are properly weighted by the collection of weights $W_t = \{w_t^{(j)}, j = 1, \ldots, m\}$ with respect to the density $g$.
 
-The resampling step is done on the existing partial sample set before expanding with the \textbf{SIS step}.
+The resampling step is done on the existing partial sample set before expanding with the SIS step.
 
 \subsubsection{Simple random sampling}
 \begin{itemize}
@@ -538,17 +587,16 @@ The resampling step is done on the existing partial sample set before expanding 
 
 Residual sampling dominates the simple random sampling in having smaller Monte Carlo variance. 
 
-\subsubsection{General resampling strategy}
-\begin{itemize}
-\item{For $j = 1, \ldots m$:
-\subitem{Draw $\mathbf{\tilde{x}}_t^{(j')}$ independently from the current sample $\{ \mathbf{x}_t^{(j)}, j = 1, \ldots, m   \}$ according to the probability vector $(a^{(1)}, \ldots, a^{(m)})$. Suppose we obtain $\mathbf{\tilde{x}}^{(j')} = \mathbf{x}_t^{(j)}$.
-}
-\subitem{A new weight $\tilde{w}_t^{(j')} = w_t^{(j)} / a^{(j)}$ is assigned to this sample.}
-}
-\end{itemize}
-The new set thus formed is also properly weighted by new weights with respect to $g$. Because the role of resampling is to prune away "bad" samples and to split the good ones, we should choose $a^{(j)}$ as a monotone function of $w_t^{(j)}$. We can choose $a^{(j)}$ to reflect certain future trend, balance between the need of diversity and the of focus (giving more presence to the samples with large weights) etc.  A generic choice is $a^{(j)} = [w_t^{(j)}]^{\alpha}$ with $0 < \alpha \leq 1$ that can vary according to the variance of $w_t$.
-
-\vspace{10mm}
+%\subsubsection{General resampling strategy}
+%\begin{itemize}
+%\item{For $j = 1, \ldots m$:
+%\subitem{Draw $\mathbf{\tilde{x}}_t^{(j')}$ independently from the current sample $\{ \mathbf{x}_t^{(j)}, j = 1, \ldots, m   \}$ according to the probability vector $(a^{(1)}, \ldots, a^{(m)})$. Suppose we obtain $\mathbf{\tilde{x}}^{(j')} = \mathbf{x}_t^{(j)}$.
+%}
+%\subitem{A new weight $\tilde{w}_t^{(j')} = w_t^{(j)} / a^{(j)}$ is assigned to this sample.}
+%}
+%\end{itemize}
+%The new set thus formed is also properly weighted by new weights with respect to $g$. Because the role of resampling is to prune away "bad" samples and to split the good ones, we should choose $a^{(j)}$ as a monotone function of $w_t^{(j)}$. We can choose $a^{(j)}$ to reflect certain future trend, balance between the need of diversity and the of focus (giving more presence to the samples with large weights) etc.  A generic choice is $a^{(j)} = [w_t^{(j)}]^{\alpha}$ with $0 < \alpha \leq 1$ that can vary according to the variance of $w_t$.
+%\vspace{10mm}
 
 \subsubsection{Resampling schedule}
 The resampling step tends to result in a better group of anecestors so  as to produce better descendants. The success of resampling, however, relies heavily on the Markovian structure among the state variables $x_1, x_2, \ldots$. Given the realization of $x_t$, the next variable $x_{t + 1}$ is statistically independent of all the previous states $\mathbf{x}_{t - 1}$. If the resampling from set $\{ \mathbf{x}_{t - 1}^{(j)}, j = 1, \ldots m\}$ is not equivalent to resampling from $\{ x_{t - 1}^{(j)}, j = 1, \ldots, m\}$, the set of the "current state" frequent resampling will rapidly impoverish diversity of the partial samples produced earlier. When no simple Markovian structure is present, frequent resampling generally gives bad results.
@@ -566,60 +614,123 @@ Increasing $c_t$ after each SIS step makes sense since it can be shown that as t
 \item{Invoke an SIS step. Set $t = t + 1$.}
 \end{itemize}
 
+%TODO will not implement
+%\subsection{Partial rejection control}
+%As $t$ increases, $cv_t^2$ increases stochastically and the weights $w_t$ typically become skewed. As a consequence, many samples  will have minimal impact on the final estimation. It is thus desirable to prune them away at an earlier stage. In \ref{SIS_RC} we have seen how the rejection control method can be used to achieve pruning without creating bias or correlations. However, the implementation of full rejection control requires that we make up the lost samples by restarting from stage $1$ and passing through all the intermediate rejection steps. Instead of employing the full rejection control, we can follow a more practical, partial rejection method that combines both rejection and resampling. 
+%
+%
+%\textbf{Partial rejection control}
+%\begin{itemize}
+%\item{At each check point $t_k$, start \textbf{RC}$(t_k)$ from \ref{RC} with threshold value $c=c_k$. If the stream $\mathbf{x}_{t_k}^{(j)}$ passes this check point, we proceed with standard SIS replacing the old weight with $w_{t_k}^{(*j)} = \max \{w_{t_k}^{(j)}, c_k\}$.}
+%\item{When rejected, go back to check point $t_{k - 1}$ to draw a sample $x_{t_{k - 1}}^{(j)}$ from the sample pool $S_{t_{k - 1}}$, with probability proportional to $w_{t_{k - 1}}^{(j)}$. Reset its weight to $\bar{w}_{t_{k - 1}}$ and make a SIS step. If the new sample formed in this way pass the check point $t_k$, then its weight is set as $w_{t_k}^{(*j)} = \max \{w_{t_k}^{(j)}, c_k \} $}
+%\item{Reset all the weights to $w_{t_k}^{(j)} = \hat{p}_c w_{t_k}^{(*j)}$.}
+%\end{itemize}
 
-\subsection{Partial rejection control}
-As $t$ increases, $cv_t^2$ increases stochastically and the weights $w_t$ typically become skewed. As a consequence, many samples  will have minimal impact on the final estimation. It is thus desirable to prune them away at an earlier stage. In \ref{SIS_RC} we have seen how the rejection control method can be used to achieve pruning without creating bias or correlations. However, the implementation of full rejection control requires that we make up the lost samples by restarting from stage $1$ and passing through all the intermediate rejection steps. Instead of employing the full rejection control, we can follow a more pratical, partial rejection method that combines both rejection and resampling. 
-
-
-\textbf{Partial rejection control}
-\begin{itemize}
-\item{At each check point $t_k$, start \textbf{RC}$(t_k)$ from \ref{RC} with threshold value $c=c_k$. If the stream $\mathbf{x}_{t_k}^{(j)}$ passes this check point, we proceed with standard SIS replacing the old weight with $w_{t_k}^{(*j)} = \max \{w_{t_k}^{(j)}, c_k\}$.}
-\item{When rejected, go back to check point $t_{k - 1}$ to draw a sample $x_{t_{k - 1}}^{(j)}$ from the sample pool $S_{t_{k - 1}}$, with probability proportional to $w_{t_{k - 1}}^{(j)}$. Reset its weight to $\bar{w}_{t_{k - 1}}$ and make a SIS step. If the new sample formed in this way pass the check point $t_k$, then its weight is set as $w_{t_k}^{(*j)} = \max \{w_{t_k}^{(j)}, c_k \} $}
-\item{Reset all the weights to $w_{t_k}^{(j)} = \hat{p}_c w_{t_k}^{(*j)}$.}
-\end{itemize}
-
-\section{Sequential Importance sampling estimator}
+\section{Sequential Importance sampling source estimator}
 %TODO continue
-Given snapshot $r_*$ that holds all infected nodes up to time $T$, we want to determine the probability  of epidemic starting in node $\theta_i$, $P(\theta_i | \vec S = \vec s_*)$ where $\vec R$ is a random variable whose one realization is $\vec s_*$.   Since all the apriori probabilities $P(\theta_i)$ are the same, we can approximate aposteriori probabilities $P(\vec S = \vec s_* | \theta_i)$ and use then to determine $P(\theta_i | \vec S = \vec s_*)$:
-\begin{equation*}
-\hat{P}(\theta_i | \vec S = \vec s_*) = \frac{\hat{P}(\vec S = \vec s_* | \theta_j)}{\sum_j \hat{P}(\vec S = \vec s_* | \theta_j)}
-\end{equation*}
+Given snapshot $s_*$ that holds all infected nodes up to time $T$, we want to determine the probability  of an epidemic starting in node $\theta_i$, $P(\theta_i | \vec S = \vec s_*)$, where $\vec S$ is a random variable whose one realization is $\vec s_*$.   Since all the apriori probabilities $P(\theta_i)$ are the same, we can approximate aposteriori probabilities $P(\vec S = \vec s_* | \theta_i)$ and use them to determine $P(\theta_i | \vec S = \vec s_*)$, as we did in \ref{MAP_pravi}. These aposteriori probabilities were estimated with Direct Monte Carlo and Soft Margin method up to a multiplicative constant. This can also be done using Sequential Importance Sampling technique.
 
-The aposteriori probabilities are estimated with Direct Monte Carlo and Soft Margin method up to a multiplicative constant. This can also be done using Sequential Importance Sampling.
-
-First note the \textbf{SIS step} as defined in \ref{SIS_step} is based on the densities of a complete history of the process, or at time $t$, all the process steps up to time $t$. The target density is thus the join probability of all the steps taken in the process. Since we are only interested  in the final realization, it makes sense to use target (and importance) density of the form:
-\begin{equation*}
+First note the SIS step as defined in Algorithm \ref{SIS_step} is based on the densities of a complete history of the process, or at time $t$, all the process steps up to time $t$. The target density is thus the join probability of all the steps taken in the process. Since we are only interested  in the final realization, it makes sense to use target and importance probability distributions  of the form
+\begin{equation}
 f(s_t) = f_1(i_1, r_1) f_2(i_2, r_2 | i_1, r_1)  f_3(i_3, r_3 | i_2, r_2)  \ldots  f_t(i_t, r_t | i_{t - 1}, r_{t - 1})
-\end{equation*}
-\begin{equation*}
-g(s_t) = g_1(i_1, r_1) g_2(i_2, r_2 | i_1, r_1) g_3(i_3, r_3 | i_2, r_2) \ldots  g_t(i_t, r_t | i_{t - 1}, r_{t - 1}))
-\end{equation*}
-where $i_t$ denotes a vector of infected nodes at time $t$, and $r_t$ denotes a vector of recovered nodes at time $t$. Note that $(i_t, r_t) = s_t$. The sequence $(i_1, r_1), (i_2, r_2), (i_3, r_3), \ldots, (i_t, r_t)$ is connected with a SIR step.
+\end{equation}
+\begin{equation}
+g(s_t) = g_1(i_1, r_1) g_2(i_2, r_2 | i_1, r_1) g_3(i_3, r_3 | i_2, r_2) \ldots  g_t(i_t, r_t | i_{t - 1}, r_{t - 1})
+\end{equation}
+where $i_t$ denotes a vector of infected nodes after time step $t$, and $r_t$ denotes a vector of recovered nodes after time step $t$. Note that $i_t \cup r_t = s_t$ and $i_t \cap r_t = \emptyset$. Each adjacent element of the sequence $(i_1, r_1), (i_2, r_2), (i_3, r_3), \ldots, (i_t, r_t)$ is connected with one SIR step.
 
 \subsection{Modelling the target distribution}
-We can evaluate the partial target density $f_k(i_k, r_k | i_{k - 1}, r_{k - 1})$ in closed form. Denote as $nei(v)$ a set of all neighbours of node $v$, as $nei(I)$ a set of all neighbours of all nodes in $I$ and as $nei_I(v) = nei(v) \cap I$ a set of all neighbours of $v$ that are in $I$. One step SIR simulation was conducted and the resulting $i_k$ and $r_k$ were given. For each node $v$ in $i_{k - 1} \cup nei(i_{k - 1})$, $1$ of $4$ independent events may have happened:
-\begin{itemize}
-\item{if $v \in i_{k - 1}$ and $v \in r_{k}$ node $v$ was recovered with probability $q$.}
-\item{if $v \in i_{k - 1}$ and $v \not\in r{k}$ node $v$ was not recovered with probability $1 - q$.}
-\item{if $v \not\in i_{k - 1}$ and $v \in i_{k}$ node $v$ was infected with probability $1 - (1 - p) ^ {nei_{i_{k-1}}(v)}$}
-\item{if $v \not\in i_{k - 1}$ and $v \not \in i_{k}$ node $v$ was not infected with probability $(1 - p)^{nei_{i_{k-1}}(v)}$}
-\end{itemize}
-
-Since all the events are independent, the target density is of the form
-\begin{equation*}
-f_k(i_k, r_k | i_{k - 1}, r_{k - 1}) = \big[\Pi_{v \in E_1} q\big]\big[ \Pi_{v \in E_2} (1 - q)\big]\big[\Pi_{v \in E_3} (1 - (1 - p) ^ {nei_{i_{k-1}}(v)})\big]\big[\Pi_{v \in E_4} (1 - p)^{nei_{i_{k-1}}(v)} \big].
-\end{equation*}
+We can evaluate the partial target density $f_k(i_k, r_k | i_{k - 1}, r_{k - 1})$ in closed form. This is exactly the probability of one time step SIR transition given with Formula \ref{fISS}.
 
 \subsection{Modelling the importance distribution}
-With our sequential sampling procedure we will try to estimate the number of realizations at time $T$ that are equal to $s*$. The importance density will be biased towards that goal. Since we are building the final densities sequentially, our biased sampling must sample reasonably enough at each step (it must not be to "slow" or too "fast"), especially since it is not certain what samples at mid steps are valuable too us as we might perform some sort of  resampling or reduction.
+With our sequential sampling procedure we will try to estimate the number of realizations at time $T$ that are equal to $s_*$ for some fixed starting node $\theta_i$. The importance density will be biased towards that goal. Since we are building the final densities sequentially, our biased sampling must sample reasonably enough at each step (it must not be to "slow" or too "fast"), especially since it is not certain what samples at mid steps are valuable too us as we might perform some sort of  resampling or reduction procedure.
 
-It is certain, however, we do not want to infect the nodes that were never infected in the snapshot $s*$ and we can safely use $SIR(p = 1, q)$ at the last \textbf{SIS} step. That leads us to the biased density similar to $f$ where only the nodes in $s*$ are eligible for events $E_3, E_4$ and it holds $p = 1$ when $k = T$.
+It is certain, however, we do not want to infect the nodes that were never infected in the snapshot $s_*$ and we can safely use $SIR(p = 1, q)$ at the last SIS step. That leads us to the biased density similar to the one in \ref{fISS} where only the nodes in $s_*$ are eligible for events $E_1$ and $E_2$ and it holds $p = 1$ when $k = T$.
 
-It may be reasonble to increase $p$ at each step of \textbf{SIS} procedure but it is not clear when this should be done. Additionally, one might want to use a resampling or a rejection technique based on $vc^2$ for simulations with many  \textbf{SIS} steps. This has to be done carefully too since our target event is rare and weights $w$ are naturally small.
+It may be reasonable to increase $p$ at each step of SIS procedure but it is not clear when this should be done. Additionally, one might want to use a resampling or a rejection technique based on $vc^2$ for simulations with many  SIS steps. This has to be done carefully too since our target event is rare and weights $w$ are naturally small.
 
+\subsection{Building the algorithm}
+%TODO describe the algorithm in detail
+%
+%
+%\vspace{5mm}
+%\begin{algorithm}
+%\caption{Biased sampler for the SIS procedure}
+%\KwData{$\mathbf{G}$ - network, $(p, q)$ - parameters of the SIR process, 
+%  $\vec s_*$ - target realization,    
+%  $t$ - current time step,  
+%  $T$ - temporal threshold, 
+%  $i_{t - 1}$ - infected nodes at the end of time step $t - 1$,
+%  $r_{t - 1}$ - recovered nodes at the end of time step $t - 1$
+%  }
+% %\KwResult{ $\hat{P_a}(\vec R = \vec r_* | \Theta = \theta_i)$}
+% \For{$i = 1$ to $n$} {
+%    Run SIR simulation $(p, q, \theta_i)$ for $T$ time steps and obtain  
+%    $\vec S_T^{(i)}$\\
+%    Calculate and save $\varphi_i = \varphi(\vec s_*, \vec S_T^{(i)})$\\
+% }
+%  Calculate $\hat{P}(\vec S = \vec s_* | \Theta = \theta_i) = \frac{1}{n} \sum_{i = 1}^{n} e ^ {\frac{-(\varphi_i -1)^2}{a^2}}$\\
+%  \Return $\hat{P}(\vec S = \vec s_* | \Theta = \theta_i)$
+% \label{SIS_g}
+% \caption{Soft Margin approximation of $P(\vec S = \vec s_* | \Theta = \theta_i)$ for a fixed source node $\theta_i$.}
+%\end{algorithm}
+%\vspace{5mm}
+%
 
+\section{Soft Margin SIS estimator}
+%TODO    [] add soft margin to SIS, 
 
-\chapter{Benchmark dataset}
+%TODO uzeti cite za SIS i za CBMC
+\section{Configurational bias Monte Carlo estimator}
+%TODO Introduction
+\subsection{Metropolis-Hastings algorithm}
+%TODO 
+
+\subsection{Metropolized independence sampler}
+%TODO more cite
+A very special choice of the proposal transition function $T(\mathbf{x}, \mathbf{y}$ is an independent trial density $g(\mathbf{y})$ in which the proposed sample $\mathbf{y}$ is generated from $g()$ independent of the previous state $\mathbf{x}$. This method is an alternative to rejection sampling and importance sampling strategies for Monte Carlo.
+
+\vspace{3mm}
+\textbf{MIS scheme}\\
+Given the current state $\mathbf{x}^{(t)}$
+\begin{itemize}
+\item{
+Draw $\mathbf{y} \sim g(\mathbf{y})$}
+\item{
+Simulate $u \sim \text{Uniform}[0, 1$ and let 
+\[\mathbf{x}^{(t + 1)} = \left\{
+  \begin{array}{lr}
+    \mathbf{y} \text{\hspace{3mm} if \hspace{3mm}} u \leq \text{min}\Big \{1,
+    \frac{w(\mathbf{y})}{\mathbf{x}^{(t)}} \Big \}  \\
+    \mathbf{x}^{(t)} \text{\hspace{3mm} otherwise,}
+  \end{array}
+\right.
+\]
+where $w(\mathbf{x}) = f(\mathbf{x}) / g(\mathbf{x})$ is the usual importance sampling weight. }
+\end{itemize}
+\vspace{3mm}
+
+Similarly to rejection control, the efficiency of MIS depends on how close the trial density $g(\mathbf{x})$ is to the target $f(\mathbf{x})$. 
+
+\subsection{Configurational bias Monte Carlo algorithm}
+Configurational bias Monte Carlo algorithm can be viewed as SIS-based Metropolized independence sampler. Let $\mathbf{x} ^{(t)}$ denote the full sample obtained at iteration $t$. We first start by obtaining $\mathbf{x}^{(0)}$  and corresponding $w^{(0)}$ from $g(\mathbf{x})$ via SIS strategy. Suppose we obtained $\mathbf{x}^{(t)}$ with weight $w(\mathbf{x}^{(t)}$ at iteration $t$. At the next iteration, we do the following:
+\begin{itemize}
+\item{Independently generate new trial configuration (sample) $\mathbf{y}$ from $g()$ using SIS strategy and compute it's importance weight $w(\mathbf{y}) = \frac{f(\mathbf{y})}{g(\mathbf{y})}$.}
+\item{Let $\mathbf{x}^{(t + 1)} = \mathbf{y}$ with probability $\text{min}\big\{1, \frac{w(\mathbf{y})}{w(\mathbf{x}^{(t)})} \big\}$} and let $\mathbf{x}^{(t + 1)} = \mathbf{x}^{(t)}$ otherwise.
+\end{itemize}
+\vspace{3mm}
+
+Note the sampling is done sequentially using the SIS procedure. Therefore, we may incorporate a stage-wise rejection decision.  Suppose we have succesfully built $k - 1$ steps of a sample and obtained $\mathbf{x}_{k - 1}$. Then at the $k$-th step of SIS we accept $\mathbf{x}_{k}$ built from $\mathbf{x}_{k - 1}$ with probability
+%TODO izvedi p_k
+\begin{equation} 
+p_k = \text{min} \big \{1, \big \}
+\end{equation}
+When rejected, we go back to the first stage to rebuild the whole configuration. Note, one does not need to perform this acceptance - rejection decision at every stage and the standard  resampling scheduling can be applied.
+
+%TODO proof of correctness
+\subsection{Building CBMC source estimator}
+
+\chapter{Analysis of source detection estimators on the benchmark dataset}
 \label{Bench}
 
 \citet{Nino} provided a dataset of SIR realizations along with their estimations obtained with Direct Monte Carlo for $4$ classes of SIR parameters: $A = (p = 0.3, q = 0.3, T =0 .5), B = (p = 0.3, q = 0.7, T = 0.5), C = (p = 07, q = 0.3, T = 5)$ and  $D = (p = 0.7, q = 0.7, T = 5)$. The benchmark dataset contains $160$ such realizations on the grid of size $30x30$.
@@ -664,7 +775,7 @@ Figure \ref{accuracy_true} represents accuracies of estimations obtained by Dire
 Figure \ref{map_map_acc} represents the accuracy used in \cite{Nino} to compare range of estimators. This accuracy refers to the portion of MAP estimations that are equal to corresponding MAP estimations of Direct Monte Carlo estimator provided in the benchmark dataset. Soft Margin accuracies presented here are taken from \cite{Nino}.Those were calculate with fixed $a=0.031$ and under the same convergence conditions as the benchmark Direct Monte Carlo solutions. Sequential Importance Sampling estimator for classes A and B outperforms SoftMargin. This only means its MAP estimations are  more similar to Direct Monte Carlo estimations. Note that these classes also have low true source node accuracy and belong to low  to medium detectability zone of parameters.
 
 The similarity between estimations obtained with Sequential Importance Sampling and Direct Monte Carlo also presents itself as a low relative MAP error estimation w. r. t. Direct Monte Carlo probability across all classes of parameters, as presented in Figure \ref{rel_err}.
-\begin{figure}[H]
+\begin{figure}
 \includegraphics[width=\textwidth]{/home/iva/dipl/res/seq_benchmark/MAP-rel_err.png}
 \caption{}
 \label{rel_err}
@@ -691,13 +802,30 @@ Figure \ref{bench_sim_accDMC} presents accuracy w.r.t. true source node of Direc
 \end{figure}
 Figure \ref{bench_sim_accSIS} presents accuracies for Sequential Importance Sampling. Note the benchmark samples that required more than $10^7$ simulations are the ones Direct Monte Carlo estimator also failed to estimate correctly.  
 
-\begin{figure}[H]
+\begin{figure}
 \includegraphics[width=\textwidth]{/home/iva/dipl/res/seq_benchmark/bench_acc_sim_DMC.png}
 \includegraphics[width=\textwidth]{/home/iva/dipl/res/seq_benchmark/bench_acc_sim_SIS.png}
 \caption{}
 \label{bench_acc_simDMC}
 \end{figure}
 
+%TODO     [] Incorporte vc2 and/or ESS in the result analysis
+%TODO     [] time accuracy correlation, 
+%TODO     [] experimental complexity / duration results, a
+
+\section{Sequential Importance Sampling with resampling}
+%TODO [] results for SIS with simple random sampling and residual sampling
+\subsection{Simple Random Sampling}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/bara/srs_accuracy_true_node.png}
+\caption{}
+\label{srs_accuracy_true}
+\end{figure}
+
+\subsection{Residual Sampling} %TODO
+
+\section{Sequential Importance Sampling and Soft Margin} %TODO
+\section{Configurational Bias Monte Carlo} %TODO
 
 \chapter{Detectability of patient zero} 
 \label{Det}
@@ -725,27 +853,128 @@ In a regime where network size restricts the epidemic spreading but not the epid
 
 \section{Detectability based on parameters of the ISS model}
 \begin{figure}[H]
-\includegraphics[width=\textwidth]{/home/iva/dipl/res/iss_grid/ISS_big_grid_org.png}
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/iss_grid/ISS_big_grid_org2.png}
 \caption{Box plots of estimated entropy density for entropy of source probability distributions of 
 single source candidates on the $4$-connected lattice $30 \times 30$ estimated with Soft Margin method with $10^4 - 10^6$ simulations with adaptive $a$ chosen from $\{1/2^3, 1/2^4, \ldots, 1/2^{15}\}$. Estimation is done under $ISS$ model with different parameters $a$ in range $0.1 - 0.9$, and $b = \{0, 0.5, 1\}$ with $T = 5$. The source node in each experiment is the central node of lattice. Each entropy density is estimated with $50$ experiments containing realizations with more than $1$ node.}
 \end{figure}
 
 \section{Detectability based on network topology for the SIR model}
 \subsection{Barabassi graph}
+
+\subsubsection{Degree centrality}
 \begin{figure}[H]
-\includegraphics[width=\textwidth]{/home/iva/dipl/res/bara/bara_big.png}
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/bara/epidemic_cov_deg.png}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/bara/accuracy_deg.png}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/bara/deg_ent.png}
 \caption{Kepsn}
 \end{figure}
 
-
-\subsection{Erdos-Renyi graph}
+\subsubsection{Closeness centrality}
 \begin{figure}[H]
-\includegraphics[width=\textwidth]{/home/iva/dipl/res/bara/bara_big.png}
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/bara/epidemic_cov_clos.png}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/bara/accuracy_clos.png}
+\caption{Kepsn}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/bara/clos_ent.png}
 \caption{Kepsn}
 \end{figure}
 
-\subsection{Topological properties of the nodes}
+\subsubsection{Betweenness centrality}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/bara/epidemic_cov_betw.png}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/bara/accuracy_betw.png}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/bara/betw_ent.png}
+\caption{Kepsn}
+\end{figure}
 
+\subsubsection{Eigenvector centrality}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/bara/epidemic_cov_eig.png}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/bara/accuracy_eig.png}
+\caption{Kepsn}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/bara/ev_ent.png}
+\caption{Kepsn}
+\end{figure}
+
+\subsection{Erd{\H{o}}s-R{\'{e}}nyi graph}
+%TODO add graphs
+\subsubsection{Degree centrality}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/erdos/epidemic_cov_deg.png}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/erdos/accuracy_deg.png}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/erdos/deg_ent.png}
+\caption{Kepsn}
+\end{figure}
+
+\subsubsection{Closeness centrality}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/erdos/epidemic_cov_clos.png}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/erdos/accuracy_clos.png}
+\caption{Kepsn}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/erdos/clos_ent.png}
+\caption{Kepsn}
+\end{figure}
+
+\subsubsection{Betweenness centrality}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/erdos/epidemic_cov_betw.png}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/erdos/accuracy_betw.png}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/erdos/betw_ent.png}
+\caption{Kepsn}
+\end{figure}
+
+\subsubsection{Eigenvector centrality}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/erdos/epidemic_cov_eig.png}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/erdos/accuracy_eig.png}
+\caption{Kepsn}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/erdos/ev_ent.png}
+\caption{Kepsn}
+\end{figure}
+
+\subsubsection{Degree coreness}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/erdos/epidemic_cov_core.png}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/erdos/accuracy_core.png}
+\caption{Kepsn}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{/home/iva/dipl/res/erdos/core_ent.png}
+\caption{Kepsn}
+\end{figure}
 
 
 \chapter{Conclusion}
